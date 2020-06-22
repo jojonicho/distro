@@ -1,12 +1,12 @@
 /* eslint-disable react/no-unescaped-entities */
-import React from 'react';
+import React from "react";
 // import { Button, Radio } from 'antd';
 // import { useRouter } from 'next/router';
-import styled from '@emotion/styled';
-import App from '../components/App';
+import styled from "@emotion/styled";
+import App from "../components/App";
 // import { useStartGameMutation, Language } from '../generated';
-import Head from 'next/head';
-import { useHelloQuery, useUsersQuery } from '../generated/graphql';
+import Head from "next/head";
+import { useHelloQuery, useUsersQuery } from "../generated/graphql";
 // import Error from '../components/Error';
 
 const Wrapper = styled.div`
@@ -19,7 +19,7 @@ const Wrapper = styled.div`
     margin: 0 auto;
     display: flex;
     flex-direction: column;
-    padding: 1rem;
+    padding: 2rem;
     background-color: rgba(256, 256, 256, 0.8);
     border-radius: 4px;
   }
