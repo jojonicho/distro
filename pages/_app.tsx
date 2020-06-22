@@ -1,18 +1,16 @@
-import App from 'next/app';
-import withGA from 'next-ga';
-import NProgress from 'nprogress';
-import { ApolloProvider } from '@apollo/react-hooks';
-import Router from 'next/router';
-import * as Sentry from '@sentry/node';
-import withApolloClient from '../lib/with-apollo-client';
-import { GA_ID } from '../constants';
-import initSentry from '../lib/sentry';
-import React, { useState, useEffect } from 'react';
-import { ThemeProvider, css, Global } from '@emotion/react';
-// import { Routes } from "./Routes";
-// import { Route } from "react-router-dom";
-import styled from 'styled-components';
-import { setAccessToken } from './accessToken';
+import App from "next/app";
+import withGA from "next-ga";
+import NProgress from "nprogress";
+import { ApolloProvider } from "@apollo/react-hooks";
+import Router from "next/router";
+import * as Sentry from "@sentry/node";
+import withApolloClient from "../lib/with-apollo-client";
+import { GA_ID } from "../constants";
+import initSentry from "../lib/sentry";
+import React, { useState, useEffect } from "react";
+import { ThemeProvider, css, Global } from "@emotion/react";
+import styled from "styled-components";
+import { setAccessToken } from "../lib/accessToken";
 
 interface AppProps {}
 
@@ -42,9 +40,9 @@ const Background = styled.div`
 export const Container: React.FC<AppProps> = () => {
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    fetch('http://localhost:4000/refresh_token', {
-      method: 'POST',
-      credentials: 'include',
+    fetch("http://localhost:4000/refresh_token", {
+      method: "POST",
+      credentials: "include",
     }).then(async (x) => {
       // console.log(x);
       const { accessToken } = await x.json();
@@ -55,11 +53,11 @@ export const Container: React.FC<AppProps> = () => {
   const Container = loading ? <div>Loading...</div> : <div>loaded</div>;
   return Container;
 };
-Router.events.on('routeChangeStart', () => {
+Router.events.on("routeChangeStart", () => {
   NProgress.start();
 });
-Router.events.on('routeChangeComplete', () => NProgress.done());
-Router.events.on('routeChangeError', () => NProgress.done());
+Router.events.on("routeChangeComplete", () => NProgress.done());
+Router.events.on("routeChangeError", () => NProgress.done());
 
 class MyApp extends App {
   static async getInitialProps({ Component, ctx }) {
@@ -95,13 +93,13 @@ class MyApp extends App {
   componentDidMount() {
     initSentry();
     console.log(
-      '%cGet the full codebase here: https://github.com/tomanagle/codenames',
-      'color: #e91e63; font-size: 16px'
+      "%cGet the full codebase here: https://github.com/tomanagle/codenames",
+      "color: #e91e63; font-size: 16px"
     );
 
     console.log(
-      '%cIf you like the game, please support the developer by buying me a coffee: https://www.buymeacoffee.com/tomn',
-      'color: #fff;background-color: #24b5b5; font-size: 16px'
+      "%cIf you like the game, please support the developer by buying me a coffee: https://www.buymeacoffee.com/tomn",
+      "color: #fff;background-color: #24b5b5; font-size: 16px"
     );
   }
   render() {
@@ -158,7 +156,7 @@ class MyApp extends App {
               text-decoration: none;
             }
             h1 {
-              font-family: 'Helvetica';
+              font-family: "Helvetica";
             }
           `}
         />
