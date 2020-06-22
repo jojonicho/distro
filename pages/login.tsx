@@ -14,7 +14,7 @@ type FormData = {
   password: string;
 };
 
-const login = () => {
+const Login = () => {
   const router = useRouter();
   const { register, setValue, handleSubmit, errors } = useForm<FormData>();
   const [login] = useLoginMutation();
@@ -60,4 +60,4 @@ const login = () => {
   );
 };
 
-export default login;
+export default Login;

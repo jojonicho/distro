@@ -9,7 +9,7 @@ type FormData = {
   password: string;
 };
 
-const register = () => {
+const Register = () => {
   const router = useRouter();
   const { register, setValue, handleSubmit, errors } = useForm<FormData>();
   const [reg] = useRegisterMutation();
@@ -44,4 +44,4 @@ const register = () => {
     </form>
   );
 };
-export default register;
+export default Register;
