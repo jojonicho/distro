@@ -1,0 +1,9 @@
+subscription Chat {
+  newMessage {
+    user {
+      username
+    }
+    date
+    content
+  }
+}
