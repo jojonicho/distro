@@ -83,9 +83,14 @@ function MyApp({ Component, pageProps, apolloClient }) {
           }
         `}
       />
-      {loading ? <div>Loading...</div> : <div>loaded</div>}
-      <Navbar />
-      <Component {...pageProps} />
+      {loading ? (
+        <div>Loading...</div>
+      ) : (
+        <div>
+          <Navbar />
+          <Component {...pageProps} />
+        </div>
+      )}
     </ApolloProvider>
   );
 }
