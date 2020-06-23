@@ -1,7 +1,7 @@
 import { ApolloClient } from "apollo-client";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { ApolloLink, Observable, split } from "apollo-link";
-import { BatchHttpLink } from "apollo-link-batch-http";
+// import { BatchHttpLink } from "apollo-link-batch-http";
 import { HttpLink } from "apollo-link-http";
 import { withClientState } from "apollo-link-state";
 import { WebSocketLink } from "apollo-link-ws";
