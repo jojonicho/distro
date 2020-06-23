@@ -1,5 +1,5 @@
-import React from 'react';
-import styled from '@emotion/styled';
+import React from 'react'
+import styled from '@emotion/styled'
 
 const Wrapper = styled.div`
   a.bmc-button {
@@ -26,7 +26,7 @@ const Wrapper = styled.div`
       padding-right: 5px;
     }
   }
-`;
+`
 
 const Coffee = () => {
   return (
@@ -44,7 +44,7 @@ const Coffee = () => {
         <span>Buy me a coffee</span>
       </a>
     </Wrapper>
-  );
-};
+  )
+}
 
-export default Coffee;
+export default Coffee

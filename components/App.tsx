@@ -1,16 +1,16 @@
-import React from "react";
-import { PageHeader, Layout as _Layout, Row, Col } from "antd";
-import Head from "next/head";
-import Link from "next/link";
-import styled from "@emotion/styled";
-import Coffee from "../components/Coffee";
-const { Header: _Header, Footer: _Footer, Content: _Content } = _Layout;
+import React from 'react'
+import { PageHeader, Layout as _Layout, Row, Col } from 'antd'
+import Head from 'next/head'
+import Link from 'next/link'
+import styled from '@emotion/styled'
+import Coffee from '../components/Coffee'
+const { Header: _Header, Footer: _Footer, Content: _Content } = _Layout
 
 const Layout = styled(_Layout)`
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-`;
+`
 
 const Header = styled(_Header)`
   border-bottom: solid 1px #ccc;
@@ -24,7 +24,7 @@ const Header = styled(_Header)`
   h1 {
     margin: 0;
   }
-`;
+`
 
 const Content = styled(_Content)`
   padding: 10px 10px;
@@ -35,14 +35,14 @@ const Content = styled(_Content)`
   @media screen and (max-width: 599px) {
     padding: 5px 5px;
   }
-`;
+`
 
 const Footer = styled(_Footer)`
   padding: 10px 24px !important;
   background-color: rgba(256, 256, 256, 0.8);
   position: relative;
   z-index: 3;
-`;
+`
 
 const App = ({
   children,
@@ -51,11 +51,11 @@ const App = ({
   showFooter = true,
   showNav = false,
 }: {
-  children: any;
-  title: string;
-  description: string;
-  showFooter?: boolean;
-  showNav?: boolean;
+  children: any
+  title: string
+  description: string
+  showFooter?: boolean
+  showNav?: boolean
 }) => {
   return (
     <Layout>
@@ -92,11 +92,11 @@ const App = ({
               <Link as="/" href="/">
                 <a>Home</a>
               </Link>
-              {" • "}
+              {' • '}
               <Link as="/policy/privacy" href="/policy/privacy">
                 <a>Privacy policy</a>
               </Link>
-              {" • "}
+              {' • '}
               <Link as="/policy/tos" href="/policy/tos">
                 <a>Terms of service</a>
               </Link>
@@ -108,7 +108,7 @@ const App = ({
         </Footer>
       )}
     </Layout>
-  );
-};
+  )
+}
 
-export default App;
+export default App

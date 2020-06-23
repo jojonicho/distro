@@ -1,12 +1,12 @@
-import React from "react";
-import { useMeQuery } from "../generated/graphql";
+import React from 'react'
+import { useMeQuery } from '../generated/graphql'
 
 interface MeProps {}
 
 const Me: React.FC<MeProps> = () => {
   const { data, error, loading } = useMeQuery({
     // fetchPolicy: "network-only",
-  });
+  })
   const Container = loading ? (
     <div>Loading...</div>
   ) : error ? (
@@ -15,8 +15,8 @@ const Me: React.FC<MeProps> = () => {
     <div>{data.me}</div>
   ) : (
     <div>No data</div>
-  );
-  return Container;
-};
+  )
+  return Container
+}
 
-export default Me;
+export default Me

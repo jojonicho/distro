@@ -1,34 +1,34 @@
-import App from "next/app";
-import withGA from "next-ga";
-import NProgress from "nprogress";
-import { ApolloProvider } from "@apollo/react-hooks";
-import Router from "next/router";
-import withApolloClient from "../lib/with-apollo-client";
-import { GA_ID } from "../constants";
-import React, { useState, useEffect } from "react";
-import { ThemeProvider, css, Global } from "@emotion/react";
-import { setAccessToken } from "../lib/accessToken";
-import { Navbar } from "../components/Navbar";
+import App from 'next/app'
+import withGA from 'next-ga'
+import NProgress from 'nprogress'
+import { ApolloProvider } from '@apollo/react-hooks'
+import Router from 'next/router'
+import withApolloClient from '../lib/with-apollo-client'
+import { GA_ID } from '../constants'
+import React, { useState, useEffect } from 'react'
+import { ThemeProvider, css, Global } from '@emotion/react'
+import { setAccessToken } from '../lib/accessToken'
+import { Navbar } from '../components/Navbar'
 
-Router.events.on("routeChangeStart", () => {
-  NProgress.start();
-});
-Router.events.on("routeChangeComplete", () => NProgress.done());
-Router.events.on("routeChangeError", () => NProgress.done());
+Router.events.on('routeChangeStart', () => {
+  NProgress.start()
+})
+Router.events.on('routeChangeComplete', () => NProgress.done())
+Router.events.on('routeChangeError', () => NProgress.done())
 
 function MyApp({ Component, pageProps, apolloClient }) {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true)
   useEffect(() => {
-    fetch("http://localhost:4000/refresh_token", {
-      method: "POST",
-      credentials: "include",
+    fetch('http://localhost:4000/refresh_token', {
+      method: 'POST',
+      credentials: 'include',
     }).then(async (x) => {
       // console.log(x);
-      const { accessToken } = await x.json();
-      setAccessToken(accessToken);
-      setLoading(false);
-    });
-  }, []);
+      const { accessToken } = await x.json()
+      setAccessToken(accessToken)
+      setLoading(false)
+    })
+  }, [])
   return (
     <ApolloProvider client={apolloClient}>
       <Global
@@ -79,7 +79,7 @@ function MyApp({ Component, pageProps, apolloClient }) {
             text-decoration: none;
           }
           h1 {
-            font-family: "Helvetica";
+            font-family: 'Helvetica';
           }
         `}
       />
@@ -92,7 +92,7 @@ function MyApp({ Component, pageProps, apolloClient }) {
         </div>
       )}
     </ApolloProvider>
-  );
+  )
 }
 
-export default withGA(GA_ID, Router)(withApolloClient(MyApp));
+export default withGA(GA_ID, Router)(withApolloClient(MyApp))

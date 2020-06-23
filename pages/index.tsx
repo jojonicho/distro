@@ -50,27 +50,6 @@ const Home = () => {
           ) : (
             <div>loading..</div>
           )}
-          <p>To get started playing codenames online with your friends:</p>
-          <ol>
-            <li>Select your language</li>
-            <li>Click 'START GAME'</li>
-            <li>Select your team and role</li>
-            <li>Share the link with your friends</li>
-            <li>Start playing Codenames</li>
-          </ol>
-
-          <p>
-            Codenames is a simple game to play. Simple, choose your team and
-            your role. Each team will have a spymaster and a player. When it's
-            your turn, the Spymaster will give the player a one word clue and a
-            number of words that clue relates to. The player should then click
-            the words that they think the clue relates to. Whoever finds all the
-            words first, wins!
-          </p>
-          <p>
-            Each round will include a 'death' word. Be sure to not click it or
-            you and your teammate will instantly lose the game.
-          </p>
         </div>
       </Wrapper>
     </App>
