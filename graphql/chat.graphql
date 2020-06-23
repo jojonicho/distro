@@ -7,3 +7,7 @@ subscription Chat {
     content
   }
 }
+
+mutation Message($content: String!) {
+  sendMessage(input: { content: $content })
+}
