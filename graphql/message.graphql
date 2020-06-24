@@ -1,0 +1,10 @@
+query Messages {
+  messages {
+    id
+    user {
+      username
+    }
+    date
+    content
+  }
+}

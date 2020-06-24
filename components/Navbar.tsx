@@ -26,14 +26,12 @@ export const Navbar: React.FC<NavbarProps> = () => {
       Hello {data.me.username!} - {data.me.email}
     </div>
   ) : null
-  // <div>Not logged in </div>
 
   return (
     <Nav>
       <Link href="/">Home</Link>
       <Link href="/register">Register</Link>
       <Link href="/login">Login</Link>
-      {/* <Link to="/me">Me</Link> */}
       <div>
         {!loading && data && data.me ? (
           <button

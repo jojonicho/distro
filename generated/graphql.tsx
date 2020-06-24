@@ -28,14 +28,15 @@ export type User = {
   id: Scalars['Int'];
   email: Scalars['String'];
   username: Scalars['String'];
+  message: Array<Message>;
 };
 
 export type Message = {
   __typename?: 'Message';
   id: Scalars['Int'];
-  user: User;
   date: Scalars['DateTime'];
   content: Scalars['String'];
+  user: User;
 };
 
 
@@ -103,7 +104,7 @@ export type ChatSubscription = (
   { __typename?: 'Subscription' }
   & { newMessage: (
     { __typename?: 'Message' }
-    & Pick<Message, 'date' | 'content'>
+    & Pick<Message, 'id' | 'date' | 'content'>
     & { user: (
       { __typename?: 'User' }
       & Pick<User, 'username'>
@@ -166,6 +167,21 @@ export type MeQuery = (
   )> }
 );
 
+export type MessagesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MessagesQuery = (
+  { __typename?: 'Query' }
+  & { messages: Array<(
+    { __typename?: 'Message' }
+    & Pick<Message, 'id' | 'date' | 'content'>
+    & { user: (
+      { __typename?: 'User' }
+      & Pick<User, 'username'>
+    ) }
+  )> }
+);
+
 export type RegisterMutationVariables = Exact<{
   username: Scalars['String'];
   email: Scalars['String'];
@@ -193,6 +209,7 @@ export type UsersQuery = (
 export const ChatDocument = gql`
     subscription Chat {
   newMessage {
+    id
     user {
       username
     }
@@ -382,6 +399,43 @@ export function useMeLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptio
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = ApolloReactCommon.QueryResult<MeQuery, MeQueryVariables>;
+export const MessagesDocument = gql`
+    query Messages {
+  messages {
+    id
+    user {
+      username
+    }
+    date
+    content
+  }
+}
+    `;
+
+/**
+ * __useMessagesQuery__
+ *
+ * To run a query within a React component, call `useMessagesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMessagesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMessagesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMessagesQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<MessagesQuery, MessagesQueryVariables>) {
+        return ApolloReactHooks.useQuery<MessagesQuery, MessagesQueryVariables>(MessagesDocument, baseOptions);
+      }
+export function useMessagesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<MessagesQuery, MessagesQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<MessagesQuery, MessagesQueryVariables>(MessagesDocument, baseOptions);
+        }
+export type MessagesQueryHookResult = ReturnType<typeof useMessagesQuery>;
+export type MessagesLazyQueryHookResult = ReturnType<typeof useMessagesLazyQuery>;
+export type MessagesQueryResult = ApolloReactCommon.QueryResult<MessagesQuery, MessagesQueryVariables>;
 export const RegisterDocument = gql`
     mutation Register($username: String!, $email: String!, $password: String!) {
   register(input: {username: $username, email: $email, password: $password})

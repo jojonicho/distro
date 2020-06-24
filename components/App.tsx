@@ -37,12 +37,12 @@ const Content = styled(_Content)`
   }
 `
 
-const Footer = styled(_Footer)`
-  padding: 10px 24px !important;
-  background-color: rgba(256, 256, 256, 0.8);
-  position: relative;
-  z-index: 3;
-`
+// const Footer = styled(_Footer)`
+//   padding: 10px 24px !important;
+//   background-color: rgba(256, 256, 256, 0.8);
+//   position: relative;
+//   z-index: 3;
+// `
 
 const App = ({
   children,
@@ -84,28 +84,24 @@ const App = ({
       <Content className="app__content">{children}</Content>
 
       {showFooter && (
-        <Footer className="app__footer">
-          <Row>
-            <Col xs={24} sm={12} md={12} lg={12} xl={12}>
-              <p>© 2020 playcodenames.online</p>
-
-              <Link as="/" href="/">
-                <a>Home</a>
-              </Link>
-              {' • '}
-              <Link as="/policy/privacy" href="/policy/privacy">
-                <a>Privacy policy</a>
-              </Link>
-              {' • '}
-              <Link as="/policy/tos" href="/policy/tos">
-                <a>Terms of service</a>
-              </Link>
-            </Col>
-            <Col xs={24} sm={12} md={12} lg={12} xl={12}>
-              <Coffee />
-            </Col>
-          </Row>
-        </Footer>
+        <Row>
+          <Col xs={24} sm={12} md={12} lg={12} xl={12}>
+            <Link as="/" href="/">
+              <a>Home</a>
+            </Link>
+            {' • '}
+            <Link as="/policy/privacy" href="/policy/privacy">
+              <a>Privacy policy</a>
+            </Link>
+            {' • '}
+            <Link as="/policy/tos" href="/policy/tos">
+              <a>Terms of service</a>
+            </Link>
+          </Col>
+          <Col xs={24} sm={12} md={12} lg={12} xl={12}>
+            <Coffee />
+          </Col>
+        </Row>
       )}
     </Layout>
   )

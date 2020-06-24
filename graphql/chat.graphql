@@ -1,5 +1,6 @@
 subscription Chat {
   newMessage {
+    id
     user {
       username
     }

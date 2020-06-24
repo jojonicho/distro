@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 // import { Button, Radio } from 'antd';
 // import { useRouter } from 'next/router';
 import styled from '@emotion/styled'
@@ -7,12 +7,15 @@ import App from '../components/App'
 // import { useStartGameMutation, Language } from '../generated';
 import Head from 'next/head'
 import {
-  useHelloQuery,
   useUsersQuery,
   useChatSubscription,
   useMessageMutation,
+  useMessagesQuery,
+  ChatDocument,
+  ChatSubscriptionVariables,
 } from '../generated/graphql'
 import { useForm } from 'react-hook-form'
+import { useSubscription } from '@apollo/react-hooks'
 // import Error from '../components/Error';
 
 const Wrapper = styled.div`
@@ -34,21 +37,44 @@ type FormData = {
   content: string
 }
 const Home = () => {
-  // const { data, loading, error } = useHelloQuery();
-  // const { data, loading, error } = useUsersQuery()
-  const [message, setMessage] = useState([])
-  const { data, loading, error } = useChatSubscription()
-  const { register, handleSubmit, setValue } = useForm<FormData>()
+  const {
+    data: message,
+    loading: messageLoading,
+    error: messagesError,
+    subscribeToMore,
+  } = useMessagesQuery()
+  const {
+    data: chat,
+    loading: chatLoading,
+    error: chatError,
+  } = useChatSubscription()
+  const { register, handleSubmit, reset } = useForm<FormData>()
   const [msg] = useMessageMutation()
   const onSubmit = handleSubmit(async ({ content }) => {
-    console.log(content)
-    const response = await msg({
+    await msg({
       variables: {
         content,
       },
     })
-    console.log(response)
+    reset()
   })
+  useEffect(() => {
+    if (!messageLoading && chat) {
+      message.messages.push(chat.newMessage)
+    }
+    // subscribeToMore<ChatSubscriptionVariables>({
+    //   document: ChatDocument,
+    //   updateQuery: (prev, { subscriptionData }) => {
+    //     if (!subscriptionData.data) return prev
+    //     const newMessage = subscriptionData.data.messages
+    //     return {
+    //       messages: [newMessage, ...prev.messages],
+    //     }
+    //   },
+    // })
+    // }
+  }, [subscribeToMore, chat, message])
+
   return (
     <App
       title="Codenames"
@@ -61,24 +87,24 @@ const Home = () => {
         ></script>
       </Head>
       <Wrapper>
-        {/* <div id="add-this-wrapper">
-          <div className="addthis_floating_share_toolbox" />
-        </div> */}
         <div className="inner">
-          {/* {data && data.users && !loading ? (
-            // <div>{data.users}</div>
-            data.users.map((user) => <li key={user.id}>{user.username} </li>)
+          {messageLoading ? (
+            <>loading..</>
           ) : (
-            <div>loading..</div>
-          )} */}
-          {data && data.newMessage && !loading ? (
-            // <div>{data.users}</div>
-            <>
-              <div>{data.newMessage.user.username}</div>
-              <div>{data.newMessage.content}</div>
-            </>
+            message.messages.map((msg) => (
+              <div>
+                <h2>{msg.user.username}</h2>
+                <p>{msg.content}</p>
+              </div>
+            ))
+          )}
+          {chatLoading ? (
+            <>send a message!</>
           ) : (
-            <div>waiting for new messages..</div>
+            <div>
+              <h2>{chat.newMessage.user.username}</h2>
+              <p>{chat.newMessage.content}</p>
+            </div>
           )}
           <form onSubmit={onSubmit}>
             <input name="content" ref={register} />
