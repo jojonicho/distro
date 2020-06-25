@@ -3,6 +3,7 @@ query Messages {
     id
     user {
       username
+      image
     }
     date
     content

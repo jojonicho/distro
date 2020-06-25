@@ -3,6 +3,7 @@ subscription Chat {
     id
     user {
       username
+      image
     }
     date
     content

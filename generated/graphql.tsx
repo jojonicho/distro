@@ -28,6 +28,7 @@ export type User = {
   id: Scalars['Int'];
   email: Scalars['String'];
   username: Scalars['String'];
+  image: Scalars['String'];
   message: Array<Message>;
 };
 
@@ -107,7 +108,7 @@ export type ChatSubscription = (
     & Pick<Message, 'id' | 'date' | 'content'>
     & { user: (
       { __typename?: 'User' }
-      & Pick<User, 'username'>
+      & Pick<User, 'username' | 'image'>
     ) }
   ) }
 );
@@ -143,7 +144,7 @@ export type LoginMutation = (
     & Pick<LoginResponse, 'accessToken'>
     & { user: (
       { __typename?: 'User' }
-      & Pick<User, 'id' | 'username' | 'email'>
+      & Pick<User, 'id' | 'username' | 'email' | 'image'>
     ) }
   ) }
 );
@@ -163,7 +164,7 @@ export type MeQuery = (
   { __typename?: 'Query' }
   & { me?: Maybe<(
     { __typename?: 'User' }
-    & Pick<User, 'username' | 'email'>
+    & Pick<User, 'username' | 'email' | 'image'>
   )> }
 );
 
@@ -177,7 +178,7 @@ export type MessagesQuery = (
     & Pick<Message, 'id' | 'date' | 'content'>
     & { user: (
       { __typename?: 'User' }
-      & Pick<User, 'username'>
+      & Pick<User, 'username' | 'image'>
     ) }
   )> }
 );
@@ -201,7 +202,7 @@ export type UsersQuery = (
   { __typename?: 'Query' }
   & { users: Array<(
     { __typename?: 'User' }
-    & Pick<User, 'id' | 'username'>
+    & Pick<User, 'id' | 'username' | 'image'>
   )> }
 );
 
@@ -212,6 +213,7 @@ export const ChatDocument = gql`
     id
     user {
       username
+      image
     }
     date
     content
@@ -307,6 +309,7 @@ export const LoginDocument = gql`
       id
       username
       email
+      image
     }
   }
 }
@@ -371,6 +374,7 @@ export const MeDocument = gql`
   me {
     username
     email
+    image
   }
 }
     `;
@@ -405,6 +409,7 @@ export const MessagesDocument = gql`
     id
     user {
       username
+      image
     }
     date
     content
@@ -473,6 +478,7 @@ export const UsersDocument = gql`
   users {
     id
     username
+    image
   }
 }
     `;

@@ -16,22 +16,52 @@ import {
 } from '../generated/graphql'
 import { useForm } from 'react-hook-form'
 import { useSubscription } from '@apollo/react-hooks'
+import theme from '../lib/theme'
 // import Error from '../components/Error';
 
-const Wrapper = styled.div`
-  padding: 1rem;
-  z-index: 2;
-  position: relative;
-  .inner {
-    width: 100%;
-    max-width: 30rem;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    padding: 2rem;
-    background-color: rgba(256, 256, 256, 0.8);
-    border-radius: 4px;
+const Input = styled.input`
+  padding: calc(0.3vw + 0.3rem);
+  width: 100%;
+  margin-top: 0.4rem;
+  border-radius: ${theme.borderRadius.default};
+  background: ${theme.colors.black.light};
+  color: ${theme.colors.white.base};
+  &:focus {
+    border: none;
   }
+`
+const Message = styled.div`
+  padding: calc(0.3vw + 0.4rem) 0;
+  display: flex;
+  flex-direction: row;
+`
+const Detail = styled.div`
+  margin: 0 1rem;
+`
+const Img = styled.img`
+  width: calc(1vw + 1.75rem);
+  height: calc(1vw + 1.75rem);
+  border-radius: ${theme.borderRadius.round};
+`
+
+const Container = styled.div`
+  padding: 1vw;
+  margin: 1vw 3vw;
+  height: 90vh;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column-reverse;
+  h1 {
+    font-size: calc(0.8rem + 0.4vw);
+  }
+  p {
+    maring: auto;
+    font-size: calc(0.75rem + 0.4vw);
+  }
+  color: ${theme.colors.white.base};
+  background: ${theme.gradient.rightToLeft};
+  // background: ${theme.colors.white.light}
+  border-radius: ${theme.borderRadius.default};
 `
 type FormData = {
   content: string
@@ -80,37 +110,35 @@ const Home = () => {
       title="Codenames"
       description="Play codenames online with friends and family. Choose between family-friendly words or adult-only words."
     >
-      <Head>
-        <script
-          type="text/javascript"
-          src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5e88192c0627598b"
-        ></script>
-      </Head>
-      <Wrapper>
+      <Container>
         <div className="inner">
           {messageLoading ? (
             <>loading..</>
           ) : (
             message.messages.map((msg) => (
-              <div>
-                <h2>{msg.user.username}</h2>
-                <p>{msg.content}</p>
-              </div>
+              <Message>
+                <Img src={msg.user.image} />
+                <Detail>
+                  <h1>{msg.user.username}</h1>
+                  <p>{msg.content}</p>
+                </Detail>
+              </Message>
             ))
           )}
-          {chatLoading ? (
-            <>send a message!</>
-          ) : (
-            <div>
-              <h2>{chat.newMessage.user.username}</h2>
-              <p>{chat.newMessage.content}</p>
-            </div>
+          {chatLoading ? null : (
+            <Message>
+              <Img src={chat.newMessage.user.image} />
+              <Detail>
+                <h1>{chat.newMessage.user.username}</h1>
+                <p>{chat.newMessage.content}</p>
+              </Detail>
+            </Message>
           )}
           <form onSubmit={onSubmit}>
-            <input name="content" ref={register} />
+            <Input name="content" ref={register} />
           </form>
         </div>
-      </Wrapper>
+      </Container>
     </App>
   )
 }
