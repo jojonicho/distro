@@ -78,7 +78,7 @@ function MyApp({ Component, pageProps, apolloClient }) {
             }
             a:hover {
               text-decoration: none;
-              color: ${theme.colors.linkHover};
+              color: ${theme.colors.secondary.base};
             }
             h1 {
               font-family: ${theme.fontFamily.heading};

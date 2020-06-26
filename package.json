@@ -17,7 +17,6 @@
     "@emotion/react": "^11.0.0-next.10",
     "@emotion/styled": "^11.0.0-next.12",
     "@sentry/node": "^5.17.0",
-    "@zeit/next-css": "^1.0.1",
     "@zeit/next-less": "^1.0.1",
     "@zeit/next-source-maps": "^0.0.3",
     "antd": "^4.3.5",

@@ -43,14 +43,18 @@ const Img = styled.img`
   height: calc(1vw + 1.75rem);
   border-radius: ${theme.borderRadius.round};
 `
-
-const Container = styled.div`
-  padding: 1vw;
-  margin: 1vw 3vw;
-  height: 90vh;
+const Chat = styled.div`
+  height: 83vh;
   overflow-y: scroll;
   display: flex;
   flex-direction: column-reverse;
+`
+const Container = styled.div`
+  padding: 1vw;
+  margin: 1vw 2vw;
+  height: 90vh;
+  display: flex;
+  flex-direction: column;
   h1 {
     font-size: calc(0.8rem + 0.4vw);
   }
@@ -60,7 +64,6 @@ const Container = styled.div`
   }
   color: ${theme.colors.white.base};
   background: ${theme.gradient.rightToLeft};
-  // background: ${theme.colors.white.light}
   border-radius: ${theme.borderRadius.default};
 `
 type FormData = {
@@ -106,38 +109,37 @@ const Home = () => {
   }, [subscribeToMore, chat, message])
 
   return (
-    <App
-      title="Codenames"
-      description="Play codenames online with friends and family. Choose between family-friendly words or adult-only words."
-    >
+    <App title="Distro" description="Distro, the productivity app">
       <Container>
-        <div className="inner">
-          {messageLoading ? (
-            <>loading..</>
-          ) : (
-            message.messages.map((msg) => (
+        <Chat>
+          <div>
+            {messageLoading ? (
+              <>loading..</>
+            ) : (
+              message.messages.map((msg) => (
+                <Message>
+                  <Img src={msg.user.image} />
+                  <Detail>
+                    <h1>{msg.user.username}</h1>
+                    <p>{msg.content}</p>
+                  </Detail>
+                </Message>
+              ))
+            )}
+            {chatLoading ? null : (
               <Message>
-                <Img src={msg.user.image} />
+                <Img src={chat.newMessage.user.image} />
                 <Detail>
-                  <h1>{msg.user.username}</h1>
-                  <p>{msg.content}</p>
+                  <h1>{chat.newMessage.user.username}</h1>
+                  <p>{chat.newMessage.content}</p>
                 </Detail>
               </Message>
-            ))
-          )}
-          {chatLoading ? null : (
-            <Message>
-              <Img src={chat.newMessage.user.image} />
-              <Detail>
-                <h1>{chat.newMessage.user.username}</h1>
-                <p>{chat.newMessage.content}</p>
-              </Detail>
-            </Message>
-          )}
-          <form onSubmit={onSubmit}>
-            <Input name="content" ref={register} />
-          </form>
-        </div>
+            )}
+          </div>
+        </Chat>
+        <form onSubmit={onSubmit}>
+          <Input name="content" ref={register} />
+        </form>
       </Container>
     </App>
   )

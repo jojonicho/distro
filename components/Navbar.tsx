@@ -55,7 +55,7 @@ export const Navbar: React.FC<NavbarProps> = () => {
     <Message>
       <Img src={data.me.image} />
       <Detail>
-        <h1>{data.me.username}</h1>
+        <p>{data.me.username}</p>
       </Detail>
     </Message>
   ) : null
