@@ -75,10 +75,12 @@ function MyApp({ Component, pageProps, apolloClient }) {
               color: ${theme.colors.primary.dark};
               transition: color 0.5s;
               text-decoration: none;
+              cursor: pointer;
             }
             a:hover {
               text-decoration: none;
               color: ${theme.colors.secondary.base};
+              cursor: pointer;
             }
             h1 {
               font-family: ${theme.fontFamily.heading};

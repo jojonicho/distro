@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react'
 // import { useRouter } from 'next/router';
 import styled from '@emotion/styled'
 import App from '../components/App'
-// import { useStartGameMutation, Language } from '../generated';
 import Head from 'next/head'
 import {
   useUsersQuery,
@@ -29,14 +28,17 @@ const Input = styled.input`
   &:focus {
     border: none;
   }
+  position: relative;
+  bottom: 1px;
 `
 const Message = styled.div`
   padding: calc(0.3vw + 0.4rem) 0;
   display: flex;
   flex-direction: row;
+  align-items: center;
 `
 const Detail = styled.div`
-  margin: 0 1rem;
+  margin: 0 0.6rem;
 `
 const Img = styled.img`
   width: calc(1vw + 1.75rem);
@@ -44,7 +46,6 @@ const Img = styled.img`
   border-radius: ${theme.borderRadius.round};
 `
 const Chat = styled.div`
-  height: 83vh;
   overflow-y: scroll;
   display: flex;
   flex-direction: column-reverse;
@@ -56,11 +57,11 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   h1 {
-    font-size: calc(0.8rem + 0.4vw);
+    font-size: calc(0.9rem + 0.1vw);
   }
   p {
     maring: auto;
-    font-size: calc(0.75rem + 0.4vw);
+    font-size: calc(0.9rem + 0.1vw);
   }
   color: ${theme.colors.white.base};
   background: ${theme.gradient.rightToLeft};

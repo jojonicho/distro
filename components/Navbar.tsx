@@ -12,8 +12,10 @@ const Nav = styled.nav`
   font-weight: 500;
   font-size: 1.1rem;
   align-items: center;
+`
+const Navlink = styled.div`
   a {
-    margin-right: 2rem;
+    margin-right: 1rem;
   }
 `
 const Logout = styled.div`
@@ -53,7 +55,11 @@ export const Navbar: React.FC<NavbarProps> = () => {
 
   const user = loading ? null : data && data.me ? (
     <Message>
-      <Img src={data.me.image} />
+      <Link href="/me">
+        <a>
+          <Img src={data.me.image} />
+        </a>
+      </Link>
       <Detail>
         <p>{data.me.username}</p>
       </Detail>
@@ -62,7 +68,7 @@ export const Navbar: React.FC<NavbarProps> = () => {
 
   return (
     <Nav>
-      <div>
+      <Navlink>
         <Link as="/" href="/">
           <a>Home</a>
         </Link>
@@ -72,7 +78,7 @@ export const Navbar: React.FC<NavbarProps> = () => {
         <Link as="/login" href="/login">
           <a>Login</a>
         </Link>
-      </div>
+      </Navlink>
       <Logout>
         {user}
         {!loading && data && data.me ? (
