@@ -32,18 +32,6 @@ export const colors = {
     c: '#3498DB',
     d: '#884EA0',
   },
-  snazzy: {
-    lightWhite: '#eff0eb',
-    black: '#282a36',
-    red: '#ff5c57',
-    green: '#5af78e',
-    yellow: '#f3f99d',
-    blue: '#57c7ff',
-    magenta: '#ff6ac1',
-    cyan: '#9aedfe',
-    white: '#f1f1f0',
-    lightBlack: '#686868',
-  },
 }
 
 export const shadow = {
@@ -71,7 +59,6 @@ export const gradient = {
   // eslint-disable-next-line
   leftToRight: `linear-gradient(-45deg, ${colors.background.light} 0%, ${colors.background.dark} 100%)`,
   // eslint-disable-next-line
-  // rightToLeft: `linear-gradient(45deg, ${colors.snazzy.lightBlack} -350%, ${colors.snazzy.black} 100%)`,
   rightToLeft: `linear-gradient(45deg, ${colors.background.dlight} 0%, ${colors.background.ddark} 150%)`,
 }
 
@@ -93,9 +80,9 @@ export const theme = {
   },
   fontFamily: {
     // eslint-disable-next-line
-    body: `Josefin Sans, Open Sans,-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'`,
+    body: `Overpass,-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'`,
     // eslint-disable-next-line
-    heading: `Josefin Sans, Candal, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'`,
+    heading: `Overpass, Candal, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'`,
   },
   layout: {
     article: '46rem',

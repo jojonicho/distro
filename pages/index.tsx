@@ -15,35 +15,21 @@ import {
 } from '../generated/graphql'
 import { useForm } from 'react-hook-form'
 import { useSubscription } from '@apollo/react-hooks'
-import theme from '../lib/theme'
+import { Message } from '../components/Message'
 // import Error from '../components/Error';
 
 const Input = styled.input`
   padding: calc(0.3vw + 0.3rem);
   width: 100%;
   margin-top: 0.4rem;
-  border-radius: ${theme.borderRadius.default};
-  background: ${theme.colors.black.light};
-  color: ${theme.colors.white.base};
+  border-radius: ${({ theme }) => theme.borderRadius.default};
+  background: ${({ theme }) => theme.colors.black.light};
+  color: ${({ theme }) => theme.colors.white.base};
   &:focus {
     border: none;
   }
   position: relative;
   bottom: 1px;
-`
-const Message = styled.div`
-  padding: calc(0.3vw + 0.4rem) 0;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-`
-const Detail = styled.div`
-  margin: 0 0.6rem;
-`
-const Img = styled.img`
-  width: calc(1vw + 1.75rem);
-  height: calc(1vw + 1.75rem);
-  border-radius: ${theme.borderRadius.round};
 `
 const Chat = styled.div`
   overflow-y: scroll;
@@ -63,9 +49,9 @@ const Container = styled.div`
     maring: auto;
     font-size: calc(0.9rem + 0.1vw);
   }
-  color: ${theme.colors.white.base};
-  background: ${theme.gradient.rightToLeft};
-  border-radius: ${theme.borderRadius.default};
+  color: ${({ theme }) => theme.colors.white.base};
+  background: ${({ theme }) => theme.gradient.rightToLeft};
+  border-radius: ${({ theme }) => theme.borderRadius.default};
 `
 type FormData = {
   content: string
@@ -118,23 +104,19 @@ const Home = () => {
               <>loading..</>
             ) : (
               message.messages.map((msg) => (
-                <Message>
-                  <Img src={msg.user.image} />
-                  <Detail>
-                    <h1>{msg.user.username}</h1>
-                    <p>{msg.content}</p>
-                  </Detail>
-                </Message>
+                <Message
+                  image={msg.user.image}
+                  username={msg.user.username}
+                  message={msg.content}
+                />
               ))
             )}
             {chatLoading ? null : (
-              <Message>
-                <Img src={chat.newMessage.user.image} />
-                <Detail>
-                  <h1>{chat.newMessage.user.username}</h1>
-                  <p>{chat.newMessage.content}</p>
-                </Detail>
-              </Message>
+              <Message
+                image={chat.newMessage.user.image}
+                username={chat.newMessage.user.username}
+                message={chat.newMessage.content}
+              />
             )}
           </div>
         </Chat>

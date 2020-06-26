@@ -17,7 +17,7 @@ Router.events.on('routeChangeStart', () => {
 Router.events.on('routeChangeComplete', () => NProgress.done())
 Router.events.on('routeChangeError', () => NProgress.done())
 
-function MyApp({ Component, pageProps, apolloClient }) {
+const MyApp = ({ Component, pageProps, apolloClient }) => {
   const [loading, setLoading] = useState(true)
   useEffect(() => {
     fetch('http://localhost:4000/refresh_token', {
