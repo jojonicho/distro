@@ -1,18 +1,38 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from '@emotion/styled'
-import { User } from '../generated/graphql'
+import { useDeleteMessageMutation } from '../generated/graphql'
 
 interface MessageProps {
+  id: number
   image: string
   username: string
   message: string
 }
 
-const MessageContainer = styled.div`
-  padding: calc(0.3vw + 0.4rem) 0;
+const Content = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.black.light};
+  }
+  border-radius: ${({ theme }) => theme.borderRadius.default};
+  p {
+    color: ${({ theme }) => theme.colors.white.grey};
+  }
+`
+
+const MessageContainer = styled.div`
+  padding: calc(0.3vw + 0.4rem) 1vw;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.black.light};
+  }
+  border-radius: ${({ theme }) => theme.borderRadius.default};
+  transition: ${({ theme }) => theme.transitions.boom.transition};
 `
 const Detail = styled.div`
   margin: 0 0.6rem;
@@ -23,18 +43,57 @@ const Img = styled.img`
   border-radius: ${({ theme }) => theme.borderRadius.round};
 `
 
+const SettingsContainer = styled.div`
+  margin: 0 0.5rem;
+  display: flex;
+  flex-direction: column;
+  background-color: ${({ theme }) => theme.colors.black.light};
+  border-radius: ${({ theme }) => theme.borderRadius.round};
+  align-items: center;
+  justify-content: center;
+`
+
+const Button = styled.button`
+  background: transparent;
+  border: none;
+  font-weight: bold;
+  color: ${({ theme }) => theme.colors.white.grey};
+  h1 {
+    margin-top: -10px;
+  }
+`
+
 export const Message: React.FC<MessageProps> = ({
+  id,
   image,
   username,
   message,
 }) => {
+  const [open, setOpen] = useState(false)
+  const [deleteMessage] = useDeleteMessageMutation()
+  const onClick = () => {
+    deleteMessage({
+      variables: {
+        id,
+      },
+    })
+    setOpen(!open)
+  }
   return (
     <MessageContainer>
-      <Img src={image} />
-      <Detail>
-        <h1>{username}</h1>
-        <p>{message}</p>
-      </Detail>
+      <Content>
+        <Img src={image} />
+        <Detail>
+          <h1>{username}</h1>
+          <p>{message}</p>
+        </Detail>
+      </Content>
+      <SettingsContainer>
+        <Button onClick={onClick}>
+          <h1>...</h1>
+        </Button>
+        {open ? <>unsent</> : null}
+      </SettingsContainer>
     </MessageContainer>
   )
 }

@@ -1,193 +1,241 @@
-import gql from 'graphql-tag'
-import * as ApolloReactCommon from '@apollo/react-common'
-import * as ApolloReactHooks from '@apollo/react-hooks'
-export type Maybe<T> = T | null
-export type Exact<T extends { [key: string]: any }> = { [K in keyof T]: T[K] }
+import gql from 'graphql-tag';
+import * as ApolloReactCommon from '@apollo/react-common';
+import * as ApolloReactHooks from '@apollo/react-hooks';
+export type Maybe<T> = T | null;
+export type Exact<T extends { [key: string]: any }> = { [K in keyof T]: T[K] };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string
-  String: string
-  Boolean: boolean
-  Int: number
-  Float: number
+  ID: string;
+  String: string;
+  Boolean: boolean;
+  Int: number;
+  Float: number;
   /** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
-  DateTime: any
-}
+  DateTime: any;
+};
 
 export type Query = {
-  __typename?: 'Query'
-  hello: Scalars['String']
-  me?: Maybe<User>
-  users: Array<User>
-  messages: Array<Message>
-  message: Array<Message>
-}
+  __typename?: 'Query';
+  hello: Scalars['String'];
+  me?: Maybe<User>;
+  users: Array<User>;
+  messages: Array<Message>;
+  message: Array<Message>;
+};
 
 export type User = {
-  __typename?: 'User'
-  id: Scalars['Int']
-  email: Scalars['String']
-  username: Scalars['String']
-  image: Scalars['String']
-  message: Array<Message>
-}
+  __typename?: 'User';
+  id: Scalars['Int'];
+  email: Scalars['String'];
+  username: Scalars['String'];
+  image: Scalars['String'];
+  message: Array<Message>;
+};
 
 export type Message = {
-  __typename?: 'Message'
-  id: Scalars['Int']
-  date: Scalars['DateTime']
-  content: Scalars['String']
-  user: User
-}
+  __typename?: 'Message';
+  id: Scalars['Int'];
+  date: Scalars['DateTime'];
+  content: Scalars['String'];
+  user: User;
+};
+
 
 export type Mutation = {
-  __typename?: 'Mutation'
-  register: Scalars['Boolean']
-  confirmEmail: Scalars['Boolean']
-  revokeRefreshTokenUser: Scalars['Boolean']
-  login: LoginResponse
-  logout: Scalars['Boolean']
-  sendMessage: Scalars['Boolean']
-}
+  __typename?: 'Mutation';
+  register: Scalars['Boolean'];
+  confirmEmail: Scalars['Boolean'];
+  revokeRefreshTokenUser: Scalars['Boolean'];
+  login: LoginResponse;
+  logout: Scalars['Boolean'];
+  sendMessage: Scalars['Boolean'];
+  deleteMessage: Scalars['Boolean'];
+};
+
 
 export type MutationRegisterArgs = {
-  input: RegisterInput
-}
+  input: RegisterInput;
+};
+
 
 export type MutationConfirmEmailArgs = {
-  token: Scalars['String']
-}
+  token: Scalars['String'];
+};
+
 
 export type MutationRevokeRefreshTokenUserArgs = {
-  userId: Scalars['Int']
-}
+  userId: Scalars['Int'];
+};
+
 
 export type MutationLoginArgs = {
-  password: Scalars['String']
-  email: Scalars['String']
-}
+  password: Scalars['String'];
+  email: Scalars['String'];
+};
+
 
 export type MutationSendMessageArgs = {
-  input: MessageInput
-}
+  input: MessageInput;
+};
+
+
+export type MutationDeleteMessageArgs = {
+  id: Scalars['Int'];
+};
 
 export type RegisterInput = {
-  email: Scalars['String']
-  username: Scalars['String']
-  password: Scalars['String']
-}
+  email: Scalars['String'];
+  username: Scalars['String'];
+  password: Scalars['String'];
+};
 
 export type LoginResponse = {
-  __typename?: 'LoginResponse'
-  accessToken: Scalars['String']
-  user: User
-}
+  __typename?: 'LoginResponse';
+  accessToken: Scalars['String'];
+  user: User;
+};
 
 export type MessageInput = {
-  content: Scalars['String']
-}
+  content: Scalars['String'];
+};
 
 export type Subscription = {
-  __typename?: 'Subscription'
-  newMessage: Message
-}
+  __typename?: 'Subscription';
+  newMessage: Message;
+};
 
-export type ChatSubscriptionVariables = Exact<{ [key: string]: never }>
+export type ChatSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
-export type ChatSubscription = { __typename?: 'Subscription' } & {
-  newMessage: { __typename?: 'Message' } & Pick<
-    Message,
-    'id' | 'date' | 'content'
-  > & { user: { __typename?: 'User' } & Pick<User, 'username' | 'image'> }
-}
 
-export type MessageMutationVariables = Exact<{
-  content: Scalars['String']
-}>
+export type ChatSubscription = (
+  { __typename?: 'Subscription' }
+  & { newMessage: (
+    { __typename?: 'Message' }
+    & Pick<Message, 'id' | 'date' | 'content'>
+    & { user: (
+      { __typename?: 'User' }
+      & Pick<User, 'username' | 'image'>
+    ) }
+  ) }
+);
 
-export type MessageMutation = { __typename?: 'Mutation' } & Pick<
-  Mutation,
-  'sendMessage'
->
+export type SendMessageMutationVariables = Exact<{
+  content: Scalars['String'];
+}>;
 
-export type HelloQueryVariables = Exact<{ [key: string]: never }>
 
-export type HelloQuery = { __typename?: 'Query' } & Pick<Query, 'hello'>
+export type SendMessageMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'sendMessage'>
+);
+
+export type DeleteMessageMutationVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type DeleteMessageMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deleteMessage'>
+);
+
+export type HelloQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type HelloQuery = (
+  { __typename?: 'Query' }
+  & Pick<Query, 'hello'>
+);
 
 export type LoginMutationVariables = Exact<{
-  email: Scalars['String']
-  password: Scalars['String']
-}>
+  email: Scalars['String'];
+  password: Scalars['String'];
+}>;
 
-export type LoginMutation = { __typename?: 'Mutation' } & {
-  login: { __typename?: 'LoginResponse' } & Pick<
-    LoginResponse,
-    'accessToken'
-  > & {
-      user: { __typename?: 'User' } & Pick<
-        User,
-        'id' | 'username' | 'email' | 'image'
-      >
-    }
-}
 
-export type LogoutMutationVariables = Exact<{ [key: string]: never }>
+export type LoginMutation = (
+  { __typename?: 'Mutation' }
+  & { login: (
+    { __typename?: 'LoginResponse' }
+    & Pick<LoginResponse, 'accessToken'>
+    & { user: (
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'username' | 'email' | 'image'>
+    ) }
+  ) }
+);
 
-export type LogoutMutation = { __typename?: 'Mutation' } & Pick<
-  Mutation,
-  'logout'
->
+export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
-export type MeQueryVariables = Exact<{ [key: string]: never }>
 
-export type MeQuery = { __typename?: 'Query' } & {
-  me?: Maybe<
-    { __typename?: 'User' } & Pick<User, 'username' | 'email' | 'image'>
-  >
-}
+export type LogoutMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'logout'>
+);
 
-export type MessagesQueryVariables = Exact<{ [key: string]: never }>
+export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
-export type MessagesQuery = { __typename?: 'Query' } & {
-  messages: Array<
-    { __typename?: 'Message' } & Pick<Message, 'id' | 'date' | 'content'> & {
-        user: { __typename?: 'User' } & Pick<User, 'username' | 'image'>
-      }
-  >
-}
+
+export type MeQuery = (
+  { __typename?: 'Query' }
+  & { me?: Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, 'username' | 'email' | 'image'>
+  )> }
+);
+
+export type MessagesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MessagesQuery = (
+  { __typename?: 'Query' }
+  & { messages: Array<(
+    { __typename?: 'Message' }
+    & Pick<Message, 'id' | 'date' | 'content'>
+    & { user: (
+      { __typename?: 'User' }
+      & Pick<User, 'username' | 'image'>
+    ) }
+  )> }
+);
 
 export type RegisterMutationVariables = Exact<{
-  username: Scalars['String']
-  email: Scalars['String']
-  password: Scalars['String']
-}>
+  username: Scalars['String'];
+  email: Scalars['String'];
+  password: Scalars['String'];
+}>;
 
-export type RegisterMutation = { __typename?: 'Mutation' } & Pick<
-  Mutation,
-  'register'
->
 
-export type UsersQueryVariables = Exact<{ [key: string]: never }>
+export type RegisterMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'register'>
+);
 
-export type UsersQuery = { __typename?: 'Query' } & {
-  users: Array<
-    { __typename?: 'User' } & Pick<User, 'id' | 'username' | 'image'>
-  >
-}
+export type UsersQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type UsersQuery = (
+  { __typename?: 'Query' }
+  & { users: Array<(
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'username' | 'image'>
+  )> }
+);
+
 
 export const ChatDocument = gql`
-  subscription Chat {
-    newMessage {
-      id
-      user {
-        username
-        image
-      }
-      date
-      content
+    subscription Chat {
+  newMessage {
+    id
+    user {
+      username
+      image
     }
+    date
+    content
   }
-`
+}
+    `;
 
 /**
  * __useChatSubscription__
@@ -204,72 +252,76 @@ export const ChatDocument = gql`
  *   },
  * });
  */
-export function useChatSubscription(
-  baseOptions?: ApolloReactHooks.SubscriptionHookOptions<
-    ChatSubscription,
-    ChatSubscriptionVariables
-  >
-) {
-  return ApolloReactHooks.useSubscription<
-    ChatSubscription,
-    ChatSubscriptionVariables
-  >(ChatDocument, baseOptions)
+export function useChatSubscription(baseOptions?: ApolloReactHooks.SubscriptionHookOptions<ChatSubscription, ChatSubscriptionVariables>) {
+        return ApolloReactHooks.useSubscription<ChatSubscription, ChatSubscriptionVariables>(ChatDocument, baseOptions);
+      }
+export type ChatSubscriptionHookResult = ReturnType<typeof useChatSubscription>;
+export type ChatSubscriptionResult = ApolloReactCommon.SubscriptionResult<ChatSubscription>;
+export const SendMessageDocument = gql`
+    mutation SendMessage($content: String!) {
+  sendMessage(input: {content: $content})
 }
-export type ChatSubscriptionHookResult = ReturnType<typeof useChatSubscription>
-export type ChatSubscriptionResult = ApolloReactCommon.SubscriptionResult<
-  ChatSubscription
->
-export const MessageDocument = gql`
-  mutation Message($content: String!) {
-    sendMessage(input: { content: $content })
-  }
-`
-export type MessageMutationFn = ApolloReactCommon.MutationFunction<
-  MessageMutation,
-  MessageMutationVariables
->
+    `;
+export type SendMessageMutationFn = ApolloReactCommon.MutationFunction<SendMessageMutation, SendMessageMutationVariables>;
 
 /**
- * __useMessageMutation__
+ * __useSendMessageMutation__
  *
- * To run a mutation, you first call `useMessageMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useMessageMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useSendMessageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSendMessageMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [messageMutation, { data, loading, error }] = useMessageMutation({
+ * const [sendMessageMutation, { data, loading, error }] = useSendMessageMutation({
  *   variables: {
  *      content: // value for 'content'
  *   },
  * });
  */
-export function useMessageMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    MessageMutation,
-    MessageMutationVariables
-  >
-) {
-  return ApolloReactHooks.useMutation<
-    MessageMutation,
-    MessageMutationVariables
-  >(MessageDocument, baseOptions)
+export function useSendMessageMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<SendMessageMutation, SendMessageMutationVariables>) {
+        return ApolloReactHooks.useMutation<SendMessageMutation, SendMessageMutationVariables>(SendMessageDocument, baseOptions);
+      }
+export type SendMessageMutationHookResult = ReturnType<typeof useSendMessageMutation>;
+export type SendMessageMutationResult = ApolloReactCommon.MutationResult<SendMessageMutation>;
+export type SendMessageMutationOptions = ApolloReactCommon.BaseMutationOptions<SendMessageMutation, SendMessageMutationVariables>;
+export const DeleteMessageDocument = gql`
+    mutation DeleteMessage($id: Int!) {
+  deleteMessage(id: $id)
 }
-export type MessageMutationHookResult = ReturnType<typeof useMessageMutation>
-export type MessageMutationResult = ApolloReactCommon.MutationResult<
-  MessageMutation
->
-export type MessageMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  MessageMutation,
-  MessageMutationVariables
->
+    `;
+export type DeleteMessageMutationFn = ApolloReactCommon.MutationFunction<DeleteMessageMutation, DeleteMessageMutationVariables>;
+
+/**
+ * __useDeleteMessageMutation__
+ *
+ * To run a mutation, you first call `useDeleteMessageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteMessageMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteMessageMutation, { data, loading, error }] = useDeleteMessageMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteMessageMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteMessageMutation, DeleteMessageMutationVariables>) {
+        return ApolloReactHooks.useMutation<DeleteMessageMutation, DeleteMessageMutationVariables>(DeleteMessageDocument, baseOptions);
+      }
+export type DeleteMessageMutationHookResult = ReturnType<typeof useDeleteMessageMutation>;
+export type DeleteMessageMutationResult = ApolloReactCommon.MutationResult<DeleteMessageMutation>;
+export type DeleteMessageMutationOptions = ApolloReactCommon.BaseMutationOptions<DeleteMessageMutation, DeleteMessageMutationVariables>;
 export const HelloDocument = gql`
-  query Hello {
-    hello
-  }
-`
+    query Hello {
+  hello
+}
+    `;
 
 /**
  * __useHelloQuery__
@@ -286,51 +338,29 @@ export const HelloDocument = gql`
  *   },
  * });
  */
-export function useHelloQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    HelloQuery,
-    HelloQueryVariables
-  >
-) {
-  return ApolloReactHooks.useQuery<HelloQuery, HelloQueryVariables>(
-    HelloDocument,
-    baseOptions
-  )
-}
-export function useHelloLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    HelloQuery,
-    HelloQueryVariables
-  >
-) {
-  return ApolloReactHooks.useLazyQuery<HelloQuery, HelloQueryVariables>(
-    HelloDocument,
-    baseOptions
-  )
-}
-export type HelloQueryHookResult = ReturnType<typeof useHelloQuery>
-export type HelloLazyQueryHookResult = ReturnType<typeof useHelloLazyQuery>
-export type HelloQueryResult = ApolloReactCommon.QueryResult<
-  HelloQuery,
-  HelloQueryVariables
->
-export const LoginDocument = gql`
-  mutation Login($email: String!, $password: String!) {
-    login(email: $email, password: $password) {
-      accessToken
-      user {
-        id
-        username
-        email
-        image
+export function useHelloQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<HelloQuery, HelloQueryVariables>) {
+        return ApolloReactHooks.useQuery<HelloQuery, HelloQueryVariables>(HelloDocument, baseOptions);
       }
+export function useHelloLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<HelloQuery, HelloQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<HelloQuery, HelloQueryVariables>(HelloDocument, baseOptions);
+        }
+export type HelloQueryHookResult = ReturnType<typeof useHelloQuery>;
+export type HelloLazyQueryHookResult = ReturnType<typeof useHelloLazyQuery>;
+export type HelloQueryResult = ApolloReactCommon.QueryResult<HelloQuery, HelloQueryVariables>;
+export const LoginDocument = gql`
+    mutation Login($email: String!, $password: String!) {
+  login(email: $email, password: $password) {
+    accessToken
+    user {
+      id
+      username
+      email
+      image
     }
   }
-`
-export type LoginMutationFn = ApolloReactCommon.MutationFunction<
-  LoginMutation,
-  LoginMutationVariables
->
+}
+    `;
+export type LoginMutationFn = ApolloReactCommon.MutationFunction<LoginMutation, LoginMutationVariables>;
 
 /**
  * __useLoginMutation__
@@ -350,34 +380,18 @@ export type LoginMutationFn = ApolloReactCommon.MutationFunction<
  *   },
  * });
  */
-export function useLoginMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    LoginMutation,
-    LoginMutationVariables
-  >
-) {
-  return ApolloReactHooks.useMutation<LoginMutation, LoginMutationVariables>(
-    LoginDocument,
-    baseOptions
-  )
-}
-export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>
-export type LoginMutationResult = ApolloReactCommon.MutationResult<
-  LoginMutation
->
-export type LoginMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  LoginMutation,
-  LoginMutationVariables
->
+export function useLoginMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<LoginMutation, LoginMutationVariables>) {
+        return ApolloReactHooks.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument, baseOptions);
+      }
+export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
+export type LoginMutationResult = ApolloReactCommon.MutationResult<LoginMutation>;
+export type LoginMutationOptions = ApolloReactCommon.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
 export const LogoutDocument = gql`
-  mutation Logout {
-    logout
-  }
-`
-export type LogoutMutationFn = ApolloReactCommon.MutationFunction<
-  LogoutMutation,
-  LogoutMutationVariables
->
+    mutation Logout {
+  logout
+}
+    `;
+export type LogoutMutationFn = ApolloReactCommon.MutationFunction<LogoutMutation, LogoutMutationVariables>;
 
 /**
  * __useLogoutMutation__
@@ -395,34 +409,21 @@ export type LogoutMutationFn = ApolloReactCommon.MutationFunction<
  *   },
  * });
  */
-export function useLogoutMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    LogoutMutation,
-    LogoutMutationVariables
-  >
-) {
-  return ApolloReactHooks.useMutation<LogoutMutation, LogoutMutationVariables>(
-    LogoutDocument,
-    baseOptions
-  )
-}
-export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>
-export type LogoutMutationResult = ApolloReactCommon.MutationResult<
-  LogoutMutation
->
-export type LogoutMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  LogoutMutation,
-  LogoutMutationVariables
->
+export function useLogoutMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<LogoutMutation, LogoutMutationVariables>) {
+        return ApolloReactHooks.useMutation<LogoutMutation, LogoutMutationVariables>(LogoutDocument, baseOptions);
+      }
+export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
+export type LogoutMutationResult = ApolloReactCommon.MutationResult<LogoutMutation>;
+export type LogoutMutationOptions = ApolloReactCommon.BaseMutationOptions<LogoutMutation, LogoutMutationVariables>;
 export const MeDocument = gql`
-  query Me {
-    me {
-      username
-      email
-      image
-    }
+    query Me {
+  me {
+    username
+    email
+    image
   }
-`
+}
+    `;
 
 /**
  * __useMeQuery__
@@ -439,41 +440,28 @@ export const MeDocument = gql`
  *   },
  * });
  */
-export function useMeQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<MeQuery, MeQueryVariables>
-) {
-  return ApolloReactHooks.useQuery<MeQuery, MeQueryVariables>(
-    MeDocument,
-    baseOptions
-  )
-}
-export function useMeLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<MeQuery, MeQueryVariables>
-) {
-  return ApolloReactHooks.useLazyQuery<MeQuery, MeQueryVariables>(
-    MeDocument,
-    baseOptions
-  )
-}
-export type MeQueryHookResult = ReturnType<typeof useMeQuery>
-export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>
-export type MeQueryResult = ApolloReactCommon.QueryResult<
-  MeQuery,
-  MeQueryVariables
->
-export const MessagesDocument = gql`
-  query Messages {
-    messages {
-      id
-      user {
-        username
-        image
+export function useMeQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<MeQuery, MeQueryVariables>) {
+        return ApolloReactHooks.useQuery<MeQuery, MeQueryVariables>(MeDocument, baseOptions);
       }
-      date
-      content
+export function useMeLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<MeQuery, MeQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<MeQuery, MeQueryVariables>(MeDocument, baseOptions);
+        }
+export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
+export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
+export type MeQueryResult = ApolloReactCommon.QueryResult<MeQuery, MeQueryVariables>;
+export const MessagesDocument = gql`
+    query Messages {
+  messages {
+    id
+    user {
+      username
+      image
     }
+    date
+    content
   }
-`
+}
+    `;
 
 /**
  * __useMessagesQuery__
@@ -490,45 +478,21 @@ export const MessagesDocument = gql`
  *   },
  * });
  */
-export function useMessagesQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    MessagesQuery,
-    MessagesQueryVariables
-  >
-) {
-  return ApolloReactHooks.useQuery<MessagesQuery, MessagesQueryVariables>(
-    MessagesDocument,
-    baseOptions
-  )
-}
-export function useMessagesLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    MessagesQuery,
-    MessagesQueryVariables
-  >
-) {
-  return ApolloReactHooks.useLazyQuery<MessagesQuery, MessagesQueryVariables>(
-    MessagesDocument,
-    baseOptions
-  )
-}
-export type MessagesQueryHookResult = ReturnType<typeof useMessagesQuery>
-export type MessagesLazyQueryHookResult = ReturnType<
-  typeof useMessagesLazyQuery
->
-export type MessagesQueryResult = ApolloReactCommon.QueryResult<
-  MessagesQuery,
-  MessagesQueryVariables
->
+export function useMessagesQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<MessagesQuery, MessagesQueryVariables>) {
+        return ApolloReactHooks.useQuery<MessagesQuery, MessagesQueryVariables>(MessagesDocument, baseOptions);
+      }
+export function useMessagesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<MessagesQuery, MessagesQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<MessagesQuery, MessagesQueryVariables>(MessagesDocument, baseOptions);
+        }
+export type MessagesQueryHookResult = ReturnType<typeof useMessagesQuery>;
+export type MessagesLazyQueryHookResult = ReturnType<typeof useMessagesLazyQuery>;
+export type MessagesQueryResult = ApolloReactCommon.QueryResult<MessagesQuery, MessagesQueryVariables>;
 export const RegisterDocument = gql`
-  mutation Register($username: String!, $email: String!, $password: String!) {
-    register(input: { username: $username, email: $email, password: $password })
-  }
-`
-export type RegisterMutationFn = ApolloReactCommon.MutationFunction<
-  RegisterMutation,
-  RegisterMutationVariables
->
+    mutation Register($username: String!, $email: String!, $password: String!) {
+  register(input: {username: $username, email: $email, password: $password})
+}
+    `;
+export type RegisterMutationFn = ApolloReactCommon.MutationFunction<RegisterMutation, RegisterMutationVariables>;
 
 /**
  * __useRegisterMutation__
@@ -549,34 +513,21 @@ export type RegisterMutationFn = ApolloReactCommon.MutationFunction<
  *   },
  * });
  */
-export function useRegisterMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    RegisterMutation,
-    RegisterMutationVariables
-  >
-) {
-  return ApolloReactHooks.useMutation<
-    RegisterMutation,
-    RegisterMutationVariables
-  >(RegisterDocument, baseOptions)
-}
-export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>
-export type RegisterMutationResult = ApolloReactCommon.MutationResult<
-  RegisterMutation
->
-export type RegisterMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  RegisterMutation,
-  RegisterMutationVariables
->
+export function useRegisterMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<RegisterMutation, RegisterMutationVariables>) {
+        return ApolloReactHooks.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument, baseOptions);
+      }
+export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
+export type RegisterMutationResult = ApolloReactCommon.MutationResult<RegisterMutation>;
+export type RegisterMutationOptions = ApolloReactCommon.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
 export const UsersDocument = gql`
-  query Users {
-    users {
-      id
-      username
-      image
-    }
+    query Users {
+  users {
+    id
+    username
+    image
   }
-`
+}
+    `;
 
 /**
  * __useUsersQuery__
@@ -593,31 +544,12 @@ export const UsersDocument = gql`
  *   },
  * });
  */
-export function useUsersQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    UsersQuery,
-    UsersQueryVariables
-  >
-) {
-  return ApolloReactHooks.useQuery<UsersQuery, UsersQueryVariables>(
-    UsersDocument,
-    baseOptions
-  )
-}
-export function useUsersLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    UsersQuery,
-    UsersQueryVariables
-  >
-) {
-  return ApolloReactHooks.useLazyQuery<UsersQuery, UsersQueryVariables>(
-    UsersDocument,
-    baseOptions
-  )
-}
-export type UsersQueryHookResult = ReturnType<typeof useUsersQuery>
-export type UsersLazyQueryHookResult = ReturnType<typeof useUsersLazyQuery>
-export type UsersQueryResult = ApolloReactCommon.QueryResult<
-  UsersQuery,
-  UsersQueryVariables
->
+export function useUsersQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<UsersQuery, UsersQueryVariables>) {
+        return ApolloReactHooks.useQuery<UsersQuery, UsersQueryVariables>(UsersDocument, baseOptions);
+      }
+export function useUsersLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<UsersQuery, UsersQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<UsersQuery, UsersQueryVariables>(UsersDocument, baseOptions);
+        }
+export type UsersQueryHookResult = ReturnType<typeof useUsersQuery>;
+export type UsersLazyQueryHookResult = ReturnType<typeof useUsersLazyQuery>;
+export type UsersQueryResult = ApolloReactCommon.QueryResult<UsersQuery, UsersQueryVariables>;

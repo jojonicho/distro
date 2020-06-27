@@ -8,7 +8,7 @@ import Head from 'next/head'
 import {
   useUsersQuery,
   useChatSubscription,
-  useMessageMutation,
+  useSendMessageMutation,
   useMessagesQuery,
   ChatDocument,
   ChatSubscriptionVariables,
@@ -18,10 +18,13 @@ import { useSubscription } from '@apollo/react-hooks'
 import { Message } from '../components/Message'
 // import Error from '../components/Error';
 
+const InputContainer = styled.div`
+  padding: calc(0.3vw + 0.3rem);
+`
+
 const Input = styled.input`
   padding: calc(0.3vw + 0.3rem);
   width: 100%;
-  margin-top: 0.4rem;
   border-radius: ${({ theme }) => theme.borderRadius.default};
   background: ${({ theme }) => theme.colors.black.light};
   color: ${({ theme }) => theme.colors.white.base};
@@ -37,7 +40,6 @@ const Chat = styled.div`
   flex-direction: column-reverse;
 `
 const Container = styled.div`
-  padding: 1vw;
   margin: 1vw 2vw;
   height: 90vh;
   display: flex;
@@ -69,7 +71,7 @@ const Home = () => {
     error: chatError,
   } = useChatSubscription()
   const { register, handleSubmit, reset } = useForm<FormData>()
-  const [msg] = useMessageMutation()
+  const [msg] = useSendMessageMutation()
   const onSubmit = handleSubmit(async ({ content }) => {
     await msg({
       variables: {
@@ -105,6 +107,7 @@ const Home = () => {
             ) : (
               message.messages.map((msg) => (
                 <Message
+                  id={msg.id}
                   image={msg.user.image}
                   username={msg.user.username}
                   message={msg.content}
@@ -113,6 +116,7 @@ const Home = () => {
             )}
             {chatLoading ? null : (
               <Message
+                id={chat.newMessage.id}
                 image={chat.newMessage.user.image}
                 username={chat.newMessage.user.username}
                 message={chat.newMessage.content}
@@ -120,9 +124,11 @@ const Home = () => {
             )}
           </div>
         </Chat>
-        <form onSubmit={onSubmit}>
-          <Input name="content" ref={register} />
-        </form>
+        <InputContainer>
+          <form onSubmit={onSubmit}>
+            <Input name="content" ref={register} />
+          </form>
+        </InputContainer>
       </Container>
     </App>
   )

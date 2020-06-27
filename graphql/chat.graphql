@@ -10,6 +10,10 @@ subscription Chat {
   }
 }
 
-mutation Message($content: String!) {
+mutation SendMessage($content: String!) {
   sendMessage(input: { content: $content })
+}
+
+mutation DeleteMessage($id: Int!) {
+  deleteMessage(id: $id)
 }
