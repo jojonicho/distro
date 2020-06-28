@@ -1,0 +1,10 @@
+query Channels {
+  channels {
+    id
+    name
+    image
+  }
+}
+mutation CreateChannel($name: String!) {
+  createChannel(name: $name)
+}

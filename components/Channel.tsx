@@ -2,11 +2,10 @@ import React, { useState } from 'react'
 import styled from '@emotion/styled'
 import { useDeleteMessageMutation } from '../generated/graphql'
 
-interface MessageProps {
+interface ChannelProps {
   id: number
   image: string
-  username: string
-  message: string
+  name: string
 }
 
 const Content = styled.div`
@@ -36,6 +35,7 @@ const MessageContainer = styled.div`
 `
 const Detail = styled.div`
   margin: 0 0.6rem;
+  font-size: 0.5rem;
 `
 const Img = styled.img`
   width: calc(1vw + 1.75rem);
@@ -68,37 +68,23 @@ const Button = styled.button`
   }
 `
 
-export const Message: React.FC<MessageProps> = ({
-  id,
-  image,
-  username,
-  message,
-}) => {
-  const [open, setOpen] = useState(false)
-  const [deleteMessage] = useDeleteMessageMutation()
-  const onClick = () => {
-    deleteMessage({
-      variables: {
-        id,
-      },
-    })
-    setOpen(!open)
-  }
+export const Channel: React.FC<ChannelProps> = ({ id, image, name }) => {
+  // const onClick = () => {
+  //   deleteMessage({
+  //     variables: {
+  //       id,
+  //     },
+  //   })
+  //   setOpen(!open)
+  // }
   return (
     <MessageContainer>
       <Content>
         <Img src={image} />
         <Detail>
-          <h1>{username}</h1>
-          <p>{message}</p>
+          <h1>{name}</h1>
         </Detail>
       </Content>
-      <SettingsContainer>
-        <Button onClick={onClick}>
-          <h1>...</h1>
-        </Button>
-        {open ? <>unsent</> : null}
-      </SettingsContainer>
     </MessageContainer>
   )
 }
