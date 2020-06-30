@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import styled from '@emotion/styled'
 import { useDeleteMessageMutation } from '../generated/graphql'
+import Link from 'next/link'
 
 interface ChannelProps {
   id: number
@@ -21,7 +22,7 @@ const Content = styled.div`
   }
 `
 
-const MessageContainer = styled.div`
+const ChannelContainer = styled.div`
   padding: calc(0.3vw + 0.4rem) 1vw;
   display: flex;
   flex-direction: row;
@@ -38,6 +39,7 @@ const Detail = styled.div`
   font-size: 0.5rem;
 `
 const Img = styled.img`
+  cursor: pointer;
   width: calc(1vw + 1.75rem);
   height: calc(1vw + 1.75rem);
   border-radius: ${({ theme }) => theme.borderRadius.round};
@@ -78,13 +80,17 @@ export const Channel: React.FC<ChannelProps> = ({ id, image, name }) => {
   //   setOpen(!open)
   // }
   return (
-    <MessageContainer>
+    <ChannelContainer>
       <Content>
-        <Img src={image} />
+        <Link as={`/channels/${id}`} href={`/channels/${id}`}>
+          <a>
+            <Img src={image} />
+          </a>
+        </Link>
         <Detail>
           <h1>{name}</h1>
         </Detail>
       </Content>
-    </MessageContainer>
+    </ChannelContainer>
   )
 }

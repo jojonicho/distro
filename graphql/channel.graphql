@@ -8,3 +8,15 @@ query Channels {
 mutation CreateChannel($name: String!) {
   createChannel(name: $name)
 }
+
+query ChannelMessages($channelId: Int!) {
+  channelMessages(channelId: $channelId) {
+    id
+    user {
+      username
+      image
+    }
+    date
+    content
+  }
+}

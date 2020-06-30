@@ -26,6 +26,10 @@ mutation SendMessage($content: String!) {
   sendMessage(input: { content: $content })
 }
 
+mutation SendChannelMessage($content: String!, $channelId: Int!) {
+  sendChannelMessage(input: { content: $content, channelId: $channelId })
+}
+
 mutation DeleteMessage($id: Int!) {
   deleteMessage(id: $id)
 }
