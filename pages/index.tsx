@@ -42,8 +42,8 @@ const Chat = styled.div`
   flex-direction: column-reverse;
 `
 const IndexContainer = styled.div`
-  height: 92.7vh;
-  margin: 0.2vw;
+  height: 90vh;
+  margin: 1vw;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
