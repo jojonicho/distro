@@ -1,11 +1,7 @@
 ---
-path: '/distro'
-cover: '../2020-06-29/distro.png'
 date: '2020-06-29'
 title: 'Distro! Discord Clone'
 tags: [NextJS, apollo, typescript, emotionJS, hooks]
-published: true
-featured: false
 ---
 
 [Frontend](https://github.com/jojonicho/distro) - [Backend](https://github.com/jojonicho/node-graphql-jwt-auth)
