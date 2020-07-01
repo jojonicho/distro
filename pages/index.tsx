@@ -1,7 +1,4 @@
-/* eslint-disable react/no-unescaped-entities */
 import React, { useState, useEffect } from 'react'
-// import { Button, Radio } from 'antd';
-// import { useRouter } from 'next/router';
 import styled from '@emotion/styled'
 import App from '../components/App'
 import Head from 'next/head'
@@ -18,7 +15,6 @@ import { useForm } from 'react-hook-form'
 import { useSubscription } from '@apollo/react-hooks'
 import { Message } from '../components/Message'
 import { Channel } from '../components/Channel'
-// import Error from '../components/Error';
 
 const InputContainer = styled.div`
   padding: calc(0.3vw + 0.3rem);
@@ -46,7 +42,7 @@ const IndexContainer = styled.div`
   margin: 1vw;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-start;
   color: ${({ theme }) => theme.colors.white.base};
   background: ${({ theme }) => theme.gradient.rightToLeft};
   border-radius: ${({ theme }) => theme.borderRadius.default};
@@ -61,9 +57,10 @@ const MemberContainer = styled.div`
 
 const ChatContainer = styled.div`
   min-width: 300px;
-  width: 65vw;
+  width: 70vw;
   display: flex;
   flex-direction: column;
+  justify-content: flex-end;
   h1 {
     font-size: calc(0.9rem + 0.1vw);
   }
@@ -74,6 +71,32 @@ const ChatContainer = styled.div`
   color: ${({ theme }) => theme.colors.white.base};
   background: ${({ theme }) => theme.gradient.rightToLeft};
   border-radius: ${({ theme }) => theme.borderRadius.default};
+`
+const AddChannelContainer = styled.div`
+  padding: calc(0.3vw + 0.4rem) 1vw;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  border-radius: ${({ theme }) => theme.borderRadius.default};
+  transition: ${({ theme }) => theme.transitions.boom.transition};
+  input {
+    width: 60%;
+  }
+`
+const Button = styled.button`
+  border-radius: ${({ theme }) => theme.borderRadius.round};
+  background: ${({ theme }) => theme.gradient.rightToLeft};
+  color: ${({ theme }) => theme.colors.white.base};
+  transition: ${({ theme }) => theme.transitions.boom.transition};
+  font-size: calc(0.5vw + 1rem);
+  &:hover {
+    background: ${({ theme }) => theme.colors.black.light};
+  }
+  border: none;
+  margin-right: 0.4vw;
+  width: calc(1vw + 1.75rem);
+  height: calc(1vw + 1.75rem);
 `
 type FormData = {
   content: string
@@ -102,10 +125,11 @@ const Home = () => {
     reset()
   })
   const { data: channels, loading: channelsLoading } = useChannelsQuery()
+  const [channelName, setChannelName] = useState('')
   const onClick = async () => {
     await chn({
       variables: {
-        name: 'bob',
+        name: channelName,
       },
     })
   }
@@ -130,7 +154,13 @@ const Home = () => {
     <App title="Distro" description="Distro, the productivity app">
       <IndexContainer>
         <ChannelContainer>
-          <button onClick={onClick} />
+          <AddChannelContainer>
+            <Button onClick={onClick}>+</Button>
+            <Input
+              placeholder="add channel"
+              onChange={(e) => setChannelName(e.target.value)}
+            />
+          </AddChannelContainer>
           {channelsLoading ? (
             <>loading..</>
           ) : (

@@ -1,6 +1,5 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styled from '@emotion/styled'
-import { useDeleteMessageMutation } from '../generated/graphql'
 import Link from 'next/link'
 
 interface ChannelProps {
@@ -23,74 +22,48 @@ const Content = styled.div`
 `
 
 const ChannelContainer = styled.div`
+  cursor: pointer;
+  a {
+    color: ${({ theme }) => theme.colors.white.base};
+  }
   padding: calc(0.3vw + 0.4rem) 1vw;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: flex-start;
-  &:hover {
-    background-color: ${({ theme }) => theme.colors.black.light};
-  }
   border-radius: ${({ theme }) => theme.borderRadius.default};
   transition: ${({ theme }) => theme.transitions.boom.transition};
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.black.light};
+    img {
+      border-radius: ${({ theme }) => theme.borderRadius.default};
+    }
+  }
 `
 const Detail = styled.div`
   margin: 0 0.6rem;
   font-size: 0.5rem;
 `
 const Img = styled.img`
-  cursor: pointer;
   width: calc(1vw + 1.75rem);
   height: calc(1vw + 1.75rem);
+  transition: all 100ms;
   border-radius: ${({ theme }) => theme.borderRadius.round};
-`
-
-const SettingsContainer = styled.div`
-  margin: 0 0.5rem;
-  display: flex;
-  flex-direction: column;
-  background-color: ${({ theme }) => theme.colors.black.light};
-  border-radius: ${({ theme }) => theme.borderRadius.round};
-  align-items: center;
-  justify-content: center;
-  &:hover {
-    filter: brightness(1.2);
-  }
-  transition: filter 150ms ease-in-out;
-`
-
-const Button = styled.button`
-  background: transparent;
-  padding: calc(0.04vw + 0.1rem);
-  border: none;
-  font-weight: bold;
-  color: ${({ theme }) => theme.colors.white.grey};
-  h1 {
-    margin-top: -10px;
-  }
 `
 
 export const Channel: React.FC<ChannelProps> = ({ id, image, name }) => {
-  // const onClick = () => {
-  //   deleteMessage({
-  //     variables: {
-  //       id,
-  //     },
-  //   })
-  //   setOpen(!open)
-  // }
   return (
-    <ChannelContainer>
-      <Content>
-        <Link as={`/channels/${id}`} href={`/channels/${id}`}>
-          <a>
+    <Link as={`/channels/${id}`} href={`/channels/${id}`}>
+      <ChannelContainer>
+        <a>
+          <Content>
             <Img src={image} />
-          </a>
-        </Link>
-        <Detail>
-          <h1>{name}</h1>
-        </Detail>
-      </Content>
-    </ChannelContainer>
+            <Detail>
+              <h1>{name}</h1>
+            </Detail>
+          </Content>
+        </a>
+      </ChannelContainer>
+    </Link>
   )
 }

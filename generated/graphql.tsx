@@ -22,10 +22,16 @@ export type Query = {
   messages: Array<Message>;
   channelMessages: Array<Message>;
   channels: Array<Channel>;
+  channelUsers: Array<User>;
 };
 
 
 export type QueryChannelMessagesArgs = {
+  channelId: Scalars['Int'];
+};
+
+
+export type QueryChannelUsersArgs = {
   channelId: Scalars['Int'];
 };
 
@@ -174,6 +180,19 @@ export type ChannelMessagesQuery = (
       { __typename?: 'User' }
       & Pick<User, 'username' | 'image'>
     ) }
+  )> }
+);
+
+export type ChannelUsersQueryVariables = Exact<{
+  channelId: Scalars['Int'];
+}>;
+
+
+export type ChannelUsersQuery = (
+  { __typename?: 'Query' }
+  & { channelUsers: Array<(
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'username' | 'email' | 'image'>
   )> }
 );
 
@@ -402,6 +421,42 @@ export function useChannelMessagesLazyQuery(baseOptions?: ApolloReactHooks.LazyQ
 export type ChannelMessagesQueryHookResult = ReturnType<typeof useChannelMessagesQuery>;
 export type ChannelMessagesLazyQueryHookResult = ReturnType<typeof useChannelMessagesLazyQuery>;
 export type ChannelMessagesQueryResult = ApolloReactCommon.QueryResult<ChannelMessagesQuery, ChannelMessagesQueryVariables>;
+export const ChannelUsersDocument = gql`
+    query ChannelUsers($channelId: Int!) {
+  channelUsers(channelId: $channelId) {
+    id
+    username
+    email
+    image
+  }
+}
+    `;
+
+/**
+ * __useChannelUsersQuery__
+ *
+ * To run a query within a React component, call `useChannelUsersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useChannelUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useChannelUsersQuery({
+ *   variables: {
+ *      channelId: // value for 'channelId'
+ *   },
+ * });
+ */
+export function useChannelUsersQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<ChannelUsersQuery, ChannelUsersQueryVariables>) {
+        return ApolloReactHooks.useQuery<ChannelUsersQuery, ChannelUsersQueryVariables>(ChannelUsersDocument, baseOptions);
+      }
+export function useChannelUsersLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<ChannelUsersQuery, ChannelUsersQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<ChannelUsersQuery, ChannelUsersQueryVariables>(ChannelUsersDocument, baseOptions);
+        }
+export type ChannelUsersQueryHookResult = ReturnType<typeof useChannelUsersQuery>;
+export type ChannelUsersLazyQueryHookResult = ReturnType<typeof useChannelUsersLazyQuery>;
+export type ChannelUsersQueryResult = ApolloReactCommon.QueryResult<ChannelUsersQuery, ChannelUsersQueryVariables>;
 export const LoginDocument = gql`
     mutation Login($email: String!, $password: String!) {
   login(email: $email, password: $password) {

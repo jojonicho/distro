@@ -20,3 +20,12 @@ query ChannelMessages($channelId: Int!) {
     content
   }
 }
+
+query ChannelUsers($channelId: Int!) {
+  channelUsers(channelId: $channelId) {
+    id
+    username
+    email
+    image
+  }
+}
