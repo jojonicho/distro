@@ -1,9 +1,10 @@
 import React from 'react'
 import { useLogoutMutation, useMeQuery } from '../generated/graphql'
 import styled from '@emotion/styled'
-import { setAccessToken } from '../lib/accessToken'
+import { setAccessToken, getAccessToken } from '../lib/accessToken'
 import Link from 'next/link'
 import theme from '../lib/theme'
+import { useRouter } from 'next/router'
 
 const Nav = styled.nav`
   padding: 1vw 2vw 0 2vw;
@@ -52,47 +53,48 @@ interface NavbarProps {}
 export const Navbar: React.FC<NavbarProps> = () => {
   const { data, loading } = useMeQuery()
   const [logout, { client }] = useLogoutMutation()
-
-  const user = loading ? null : data && data.me ? (
-    <Message>
-      <Link href="/me">
-        <a>
-          <Img src={data.me.image} />
-        </a>
-      </Link>
-      <Detail>
-        <p>{data.me.username}</p>
-      </Detail>
-    </Message>
-  ) : null
-
+  const router = useRouter()
   return (
     <Nav>
       <Navlink>
         <Link as="/" href="/">
           <a>Home</a>
         </Link>
-        <Link as="/register" href="/register">
-          <a>Register</a>
-        </Link>
-        <Link as="/login" href="/login">
-          <a>Login</a>
-        </Link>
+        {data && !data.me ? (
+          <>
+            <Link as="/register" href="/register">
+              <a>Register</a>
+            </Link>
+            <Link as="/login" href="/login">
+              <a>Login</a>
+            </Link>
+          </>
+        ) : null}
       </Navlink>
-      <Logout>
-        {user}
-        {!loading && data && data.me ? (
+      {!loading && data && data.me ? (
+        <Logout>
+          <Message>
+            <Link href="/me">
+              <a>
+                <Img src={data.me.image} />
+              </a>
+            </Link>
+            <Detail>
+              <p>{data.me.username}</p>
+            </Detail>
+          </Message>
           <Button
             onClick={async () => {
               await logout()
               setAccessToken('')
               await client!.resetStore()
+              router.push('/')
             }}
           >
             logout
           </Button>
-        ) : null}
-      </Logout>
+        </Logout>
+      ) : null}
     </Nav>
   )
 }

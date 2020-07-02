@@ -53,6 +53,7 @@ const IndexContainer = styled.div`
 const ChannelContainer = styled.div`
   display: flex;
   flex-direction: column;
+  overflow-y: scroll;
 `
 
 const ChatContainer = styled.div`
@@ -137,11 +138,13 @@ const Home = () => {
   })
   const [channelName, setChannelName] = useState('')
   const onClick = async () => {
-    await chn({
-      variables: {
-        name: channelName,
-      },
-    })
+    if (channelName !== '') {
+      await chn({
+        variables: {
+          name: channelName,
+        },
+      })
+    }
   }
   useEffect(() => {
     if (!messageLoading && chat) {
@@ -168,6 +171,7 @@ const Home = () => {
             <Button onClick={onClick}>+</Button>
             <Input
               placeholder="add channel"
+              required={true}
               onChange={(e) => setChannelName(e.target.value)}
             />
           </AddChannelContainer>

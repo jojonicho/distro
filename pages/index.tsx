@@ -127,11 +127,13 @@ const Home = () => {
   const { data: channels, loading: channelsLoading } = useChannelsQuery()
   const [channelName, setChannelName] = useState('')
   const onClick = async () => {
-    await chn({
-      variables: {
-        name: channelName,
-      },
-    })
+    if (channelName !== '') {
+      await chn({
+        variables: {
+          name: channelName,
+        },
+      })
+    }
   }
   useEffect(() => {
     if (!messageLoading && chat) {
@@ -158,7 +160,14 @@ const Home = () => {
             <Button onClick={onClick}>+</Button>
             <Input
               placeholder="add channel"
+              required={true}
               onChange={(e) => setChannelName(e.target.value)}
+              // onKeyPress={(e) => {
+              //   var keyCode = e.keyCode ? e.keyCode : e.which
+              //   if (keyCode == 13) {
+              //     onClick
+              //   }
+              // }}
             />
           </AddChannelContainer>
           {channelsLoading ? (
