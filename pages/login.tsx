@@ -101,6 +101,7 @@ const Login = () => {
             type="password"
             placeholder="password"
             name="password"
+            autoComplete="new-password"
             ref={register}
           />
           {errors.password && 'password is required.'}
