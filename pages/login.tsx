@@ -9,6 +9,7 @@ import {
 import { setAccessToken } from '../lib/accessToken'
 import { useRouter } from 'next/router'
 import styled from '@emotion/styled'
+import { Subtitle } from '../components/Subtitle'
 
 const LoginContainer = styled.div`
   display: flex;
@@ -24,8 +25,8 @@ const FormContainer = styled.div`
   justify-content: center;
   align-items: center;
   border-radius: ${({ theme }) => theme.borderRadius.default};
-  padding: calc(0.1vw + 3rem);
-  color: white;
+  padding: calc(0.05vw + 2.5rem);
+  color: ${({ theme }) => theme.colors.secondary.base};
   font-weight: bold;
   .submit {
     cursor: pointer;
@@ -40,8 +41,14 @@ const FormContainer = styled.div`
   }
 `
 
+const Form = styled.form`
+  div {
+    margin-bottom: 1rem;
+  }
+`
 const Input = styled.input`
-  margin: 0.4rem 0 0.8rem 0;
+  // margin: 0.4rem 0 0.8rem 0;
+  margin: 0.4rem 0;
   padding: calc(0.1vw + 0.5rem);
   display: flex;
   justify-content: center;
@@ -64,9 +71,14 @@ type FormData = {
 
 const Login = () => {
   const router = useRouter()
-  const { register, setValue, handleSubmit, errors } = useForm<FormData>()
+  const { register, handleSubmit, errors } = useForm<FormData>({
+    mode: 'onBlur',
+    reValidateMode: 'onChange',
+    shouldFocusError: true,
+    shouldUnregister: true,
+  })
   const [login, { client }] = useLoginMutation()
-  const onSubmit = handleSubmit(async ({ email, password }) => {
+  const onSubmit = async ({ email, password }) => {
     const response = await login({
       variables: {
         email,
@@ -88,25 +100,41 @@ const Login = () => {
       setAccessToken(response.data.login.accessToken)
       router.push('/')
     }
-  })
+  }
   return (
     <LoginContainer>
       <FormContainer>
-        <form onSubmit={onSubmit}>
-          <label>email</label>
-          <Input name="email" placeholder="email" ref={register} />
-          {errors.email && 'email is required.'}
-          <label>password</label>
-          <Input
-            type="password"
-            placeholder="password"
-            name="password"
-            autoComplete="new-password"
-            ref={register}
-          />
-          {errors.password && 'password is required.'}
+        <Form onSubmit={handleSubmit(onSubmit)}>
+          <div>
+            <Subtitle text="email" />
+            <Input
+              placeholder="iloveemilia@rem.com"
+              name="email"
+              ref={register({
+                required: 'Required',
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: 'invalid email address',
+                },
+              })}
+            />
+            {errors.email && errors.email.message}
+          </div>
+          <div>
+            <Subtitle text="password" />
+            <Input
+              type="password"
+              placeholder="password"
+              name="password"
+              autoComplete="new-password"
+              ref={register({
+                required: 'Required',
+              })}
+            />
+            {errors.password && errors.password.message}
+          </div>
           <Input className="submit" type="submit" />
-        </form>
+        </Form>
       </FormContainer>
     </LoginContainer>
   )

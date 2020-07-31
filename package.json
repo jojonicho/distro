@@ -14,6 +14,7 @@
     "@apollo/react-hoc": "^3.1.5",
     "@apollo/react-hooks": "^3.1.5",
     "@apollo/react-ssr": "^3.1.5",
+    "@emotion/core": "^10.0.28",
     "@emotion/react": "^11.0.0-next.10",
     "@emotion/styled": "^11.0.0-next.12",
     "@sentry/node": "^5.18.1",
@@ -58,7 +59,7 @@
     "react": "^16.13.1",
     "react-copy-to-clipboard": "^5.0.2",
     "react-dom": "^16.13.1",
-    "react-hook-form": "^5.7.2",
+    "react-hook-form": "^6.2.0",
     "react-i18next": "^11.7.0",
     "subscriptions-transport-ws": "^0.9.16"
   },
