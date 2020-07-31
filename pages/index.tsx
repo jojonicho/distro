@@ -10,11 +10,16 @@ import {
   ChatSubscriptionVariables,
   useChannelsQuery,
   useCreateChannelMutation,
+  useMeQuery,
+  useLogoutMutation,
 } from '../generated/graphql'
 import { useForm } from 'react-hook-form'
-import { useSubscription } from '@apollo/react-hooks'
 import { Message } from '../components/Message'
-import { Channel } from '../components/Channel'
+import ChannelList from '../components/ChannelList'
+import Login from './login'
+import { Navbar } from '../components/Navbar'
+import { BarLoader } from 'react-spinners'
+// import { Navbar } from '../components/Navbar'
 
 const InputContainer = styled.div`
   padding: calc(0.3vw + 0.3rem);
@@ -38,26 +43,22 @@ const Chat = styled.div`
   flex-direction: column-reverse;
 `
 const IndexContainer = styled.div`
-  height: 90vh;
-  margin: 1vw;
+  height: 100vh;
+  width: 99vw;
+  // margin: 1vw;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   color: ${({ theme }) => theme.colors.white.base};
   background: ${({ theme }) => theme.gradient.rightToLeft};
-  border-radius: ${({ theme }) => theme.borderRadius.default};
-`
-const ChannelContainer = styled.div`
-  display: flex;
-  flex-direction: column;
+  // border-radius: ${({ theme }) => theme.borderRadius.default};
 `
 const MemberContainer = styled.div`
   display: flex;
 `
-
 const ChatContainer = styled.div`
   min-width: 300px;
-  width: 70vw;
+  width: 90vw;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -72,36 +73,13 @@ const ChatContainer = styled.div`
   background: ${({ theme }) => theme.gradient.rightToLeft};
   border-radius: ${({ theme }) => theme.borderRadius.default};
 `
-const AddChannelContainer = styled.div`
-  padding: calc(0.3vw + 0.4rem) 1vw;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  border-radius: ${({ theme }) => theme.borderRadius.default};
-  transition: ${({ theme }) => theme.transitions.boom.transition};
-  input {
-    width: 60%;
-  }
-`
-const Button = styled.button`
-  border-radius: ${({ theme }) => theme.borderRadius.round};
-  background: ${({ theme }) => theme.gradient.rightToLeft};
-  color: ${({ theme }) => theme.colors.white.base};
-  transition: ${({ theme }) => theme.transitions.boom.transition};
-  font-size: calc(0.5vw + 1rem);
-  &:hover {
-    background: ${({ theme }) => theme.colors.black.light};
-  }
-  border: none;
-  margin-right: 0.4vw;
-  width: calc(1vw + 1.75rem);
-  height: calc(1vw + 1.75rem);
-`
+
 type FormData = {
   content: string
 }
+
 const Home = () => {
+  const { data: user, loading: userLoading } = useMeQuery()
   const {
     data: message,
     loading: messageLoading,
@@ -115,7 +93,6 @@ const Home = () => {
   } = useChatSubscription()
   const { register, handleSubmit, reset } = useForm<FormData>()
   const [msg] = useSendMessageMutation()
-  const [chn] = useCreateChannelMutation()
   const onSubmit = handleSubmit(async ({ content }) => {
     await msg({
       variables: {
@@ -125,16 +102,7 @@ const Home = () => {
     reset()
   })
   const { data: channels, loading: channelsLoading } = useChannelsQuery()
-  const [channelName, setChannelName] = useState('')
-  const onClick = async () => {
-    if (channelName !== '') {
-      await chn({
-        variables: {
-          name: channelName,
-        },
-      })
-    }
-  }
+
   useEffect(() => {
     if (!messageLoading && chat) {
       message.messages.push(chat.newMessage)
@@ -153,65 +121,50 @@ const Home = () => {
   }, [subscribeToMore, chat, message])
 
   return (
-    <App title="Distro" description="Distro, the productivity app">
-      <IndexContainer>
-        <ChannelContainer>
-          <AddChannelContainer>
-            <Button onClick={onClick}>+</Button>
-            <Input
-              placeholder="add channel"
-              required={true}
-              onChange={(e) => setChannelName(e.target.value)}
-              // onKeyPress={(e) => {
-              //   var keyCode = e.keyCode ? e.keyCode : e.which
-              //   if (keyCode == 13) {
-              //     onClick
-              //   }
-              // }}
-            />
-          </AddChannelContainer>
-          {channelsLoading ? (
-            <>loading..</>
-          ) : (
-            channels.channels.map((chn) => (
-              <Channel id={chn.id} image={chn.image} name={chn.name} />
-            ))
-          )}
-        </ChannelContainer>
-        <ChatContainer>
-          <Chat>
-            <div>
-              {messageLoading ? (
-                <>loading..</>
-              ) : (
-                message.messages.map((msg) => (
+    <App title="Distro" description="Recharge yourself!">
+      {userLoading ? (
+        <BarLoader />
+      ) : user && user.me ? (
+        <IndexContainer>
+          <Navbar data={user} loading={userLoading} />
+          <ChannelList channels={channels} loading={channelsLoading} />
+          <ChatContainer>
+            <Chat>
+              <div>
+                {messageLoading ? (
+                  <BarLoader />
+                ) : (
+                  message.messages.map((msg) => (
+                    <Message
+                      key={msg.id}
+                      id={msg.id}
+                      image={msg.user.image}
+                      username={msg.user.username}
+                      message={msg.content}
+                    />
+                  ))
+                )}
+                {chatLoading ? null : (
                   <Message
-                    key={msg.id}
-                    id={msg.id}
-                    image={msg.user.image}
-                    username={msg.user.username}
-                    message={msg.content}
+                    id={chat.newMessage.id}
+                    image={chat.newMessage.user.image}
+                    username={chat.newMessage.user.username}
+                    message={chat.newMessage.content}
                   />
-                ))
-              )}
-              {chatLoading ? null : (
-                <Message
-                  id={chat.newMessage.id}
-                  image={chat.newMessage.user.image}
-                  username={chat.newMessage.user.username}
-                  message={chat.newMessage.content}
-                />
-              )}
-            </div>
-          </Chat>
-          <InputContainer>
-            <form onSubmit={onSubmit}>
-              <Input name="content" placeholder="Message" ref={register} />
-            </form>
-          </InputContainer>
-        </ChatContainer>
-        <MemberContainer></MemberContainer>
-      </IndexContainer>
+                )}
+              </div>
+            </Chat>
+            <InputContainer>
+              <form onSubmit={onSubmit}>
+                <Input name="content" placeholder="Message" ref={register} />
+              </form>
+            </InputContainer>
+          </ChatContainer>
+          <MemberContainer></MemberContainer>
+        </IndexContainer>
+      ) : (
+        <Login />
+      )}
     </App>
   )
 }

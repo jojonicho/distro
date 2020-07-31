@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from '@emotion/styled'
 import Link from 'next/link'
 
@@ -8,6 +8,29 @@ interface ChannelProps {
   name: string
 }
 
+interface DetailProps {
+  open: boolean
+}
+
+const ChannelContainer = styled.div`
+  cursor: pointer;
+  a {
+    color: ${({ theme }) => theme.colors.white.base};
+  }
+  padding: calc(0.3vw + 0.4rem);
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border-radius: ${({ theme }) => theme.borderRadius.default};
+  transition: ${({ theme }) => theme.transitions.boom.transition};
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.black.light};
+    img {
+      transform: scale(1.15);
+    }
+  }
+`
 const Content = styled.div`
   display: flex;
   flex-direction: row;
@@ -21,44 +44,35 @@ const Content = styled.div`
   }
 `
 
-const ChannelContainer = styled.div`
-  cursor: pointer;
-  a {
-    color: ${({ theme }) => theme.colors.white.base};
-  }
-  padding: calc(0.3vw + 0.4rem) 1vw;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: flex-start;
-  border-radius: ${({ theme }) => theme.borderRadius.default};
-  transition: ${({ theme }) => theme.transitions.boom.transition};
-  &:hover {
-    background-color: ${({ theme }) => theme.colors.black.light};
-    img {
-      border-radius: ${({ theme }) => theme.borderRadius.default};
-    }
-  }
-`
-const Detail = styled.div`
+const Detail = styled.div<DetailProps>`
   margin: 0 0.6rem;
   font-size: 0.5rem;
+  display: ${(props) => (props.open ? 'flex' : 'none')};
+  z-index: 20;
+  position: fixed;
+  border-radius: ${({ theme }) => theme.borderRadius.default};
+  background: ${({ theme }) => theme.colors.background.ddark};
+  padding: 10px;
 `
 const Img = styled.img`
   width: calc(1vw + 1.75rem);
   height: calc(1vw + 1.75rem);
-  transition: all 100ms;
+  transition: ${({ theme }) => theme.transitions.boom.transition};
   border-radius: ${({ theme }) => theme.borderRadius.round};
 `
 
 export const Channel: React.FC<ChannelProps> = ({ id, image, name }) => {
+  const [open, setOpen] = useState(false)
   return (
     <Link as={`/channels/${id}`} href={`/channels/${id}`}>
-      <ChannelContainer>
+      <ChannelContainer
+        onMouseEnter={() => setOpen(true)}
+        onMouseLeave={() => setOpen(false)}
+      >
         <a>
           <Content>
             <Img src={image} />
-            <Detail>
+            <Detail open={open}>
               <h1>{name}</h1>
             </Detail>
           </Content>

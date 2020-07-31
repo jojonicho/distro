@@ -1,35 +1,57 @@
 import React from 'react'
-import { useLogoutMutation, useMeQuery } from '../generated/graphql'
+import { useLogoutMutation, useMeQuery, MeQuery } from '../generated/graphql'
 import styled from '@emotion/styled'
 import { setAccessToken, getAccessToken } from '../lib/accessToken'
 import Link from 'next/link'
 import theme from '../lib/theme'
 import { useRouter } from 'next/router'
+import { BarLoader } from 'react-spinners'
 
 const Nav = styled.nav`
-  padding: 1vw 2vw 0 2vw;
+  // padding: 1vw 2vw 0 2vw;
+  margin-right: 0.5vw;
+  padding: 2px;
   display: flex;
   justify-content: space-between;
   font-weight: 500;
   font-size: 1.1rem;
   align-items: center;
+  position: absolute;
+  right: 0;
+  // background: ${({ theme }) => theme.colors.snazzy.mekariPurple};
+  backdrop-filter: blur(3px);
 `
-const Navlink = styled.div`
-  a {
-    margin-right: 1rem;
-  }
-`
+// const Navlink = styled.div`
+//   a {
+//     margin-right: 1rem;
+//   }
+// `
 const Logout = styled.div`
   display: flex;
+  button {
+    margin-left: 0.5rem;
+    font-weight: bold;
+    color: ${({ theme }) => theme.colors.white.base};
+    background: ${({ theme }) => theme.colors.secondary.base};
+  }
 `
+
 const Button = styled.button`
-  margin-left: 0.1vw;
   background: ${theme.colors.black.blue};
-  color: ${theme.colors.white.base};
-  padding: 0 0.2vw;
+  transition: ${(props) => props.theme.transitions.boom.transition};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border-radius: 2px;
+  padding: 0 calc(5px + 0.2vw);
+  &:focus {
+    outline: 0;
+  }
+  &:hover {
+    transform: scale(1.03);
+  }
   border: none;
-  border-radius: ${theme.borderRadius.default};
-  font-weight: bold;
 `
 
 const Message = styled.div`
@@ -46,17 +68,21 @@ const Img = styled.img`
   width: calc(1vw + 1.75rem);
   height: calc(1vw + 1.75rem);
   border-radius: ${theme.borderRadius.round};
+  &:hover {
+    filter: brightness(0.8);
+  }
 `
+interface NavbarProps {
+  data: MeQuery
+  loading: boolean
+}
 
-interface NavbarProps {}
-
-export const Navbar: React.FC<NavbarProps> = () => {
-  const { data, loading } = useMeQuery()
+export const Navbar: React.FC<NavbarProps> = ({ data, loading }) => {
   const [logout, { client }] = useLogoutMutation()
   const router = useRouter()
   return (
     <Nav>
-      <Navlink>
+      {/* <Navlink>
         <Link as="/" href="/">
           <a>Home</a>
         </Link>
@@ -70,8 +96,11 @@ export const Navbar: React.FC<NavbarProps> = () => {
             </Link>
           </>
         ) : null}
-      </Navlink>
-      {!loading && data && data.me ? (
+      </Navlink> */}
+
+      {loading ? (
+        <BarLoader />
+      ) : !loading && data && data.me ? (
         <Logout>
           <Message>
             <Link href="/me">

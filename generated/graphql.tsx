@@ -42,7 +42,6 @@ export type User = {
   username: Scalars['String'];
   image: Scalars['String'];
   messages: Array<Message>;
-  channels: Array<Channel>;
 };
 
 export type Message = {
@@ -61,7 +60,6 @@ export type Channel = {
   name: Scalars['String'];
   users: Array<User>;
   image: Scalars['String'];
-  messages: Array<Message>;
 };
 
 export type Mutation = {

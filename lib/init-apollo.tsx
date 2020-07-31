@@ -66,7 +66,7 @@ const create = (initialState, headers) => {
   const httpLink = new HttpLink({
     uri: 'http://localhost:4000/graphql',
     credentials: 'include',
-    // fetch,
+    fetch,
   })
 
   // Make sure the wsLink is only created on the browser. The server doesn't have a native implemention for websockets
@@ -162,9 +162,9 @@ const create = (initialState, headers) => {
             },
           },
         },
-        // cache,
+        cache,
         // @ts-ignore
-        // ssrMode, // Disables forceFetch on the server (so queries are only run once)
+        ssrMode, // Disables forceFetch on the server (so queries are only run once)
       }),
 
       // Push the links into the Apollo client

@@ -4,6 +4,7 @@ import { useRegisterMutation } from '../generated/graphql'
 import { useRouter } from 'next/router'
 import styled from '@emotion/styled'
 import { Subtitle } from '../components/Subtitle'
+import Link from 'next/link'
 
 type FormData = {
   username: string
@@ -129,6 +130,7 @@ const Register = () => {
           <Input className="submit" type="submit" />
         </Form>
       </FormContainer>
+      <Link href="/">already have an account?</Link>
     </RegisterContainer>
   )
 }

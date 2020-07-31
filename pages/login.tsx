@@ -10,6 +10,7 @@ import { setAccessToken } from '../lib/accessToken'
 import { useRouter } from 'next/router'
 import styled from '@emotion/styled'
 import { Subtitle } from '../components/Subtitle'
+import Link from 'next/link'
 
 const LoginContainer = styled.div`
   display: flex;
@@ -136,6 +137,7 @@ const Login = () => {
           <Input className="submit" type="submit" />
         </Form>
       </FormContainer>
+      <Link href="/register">or Register for an account</Link>
     </LoginContainer>
   )
 }

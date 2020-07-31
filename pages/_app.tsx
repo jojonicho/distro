@@ -9,13 +9,22 @@ import React, { useState, useEffect } from 'react'
 import { ThemeProvider, css, Global } from '@emotion/react'
 import { setAccessToken } from '../lib/accessToken'
 import { Navbar } from '../components/Navbar'
+import { HashLoader as Loader } from 'react-spinners'
 import theme from '../lib/theme'
+import styled from '@emotion/styled'
+import { useMeQuery } from '../generated/graphql'
 
 Router.events.on('routeChangeStart', () => {
   NProgress.start()
 })
 Router.events.on('routeChangeComplete', () => NProgress.done())
 Router.events.on('routeChangeError', () => NProgress.done())
+
+const Container = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
 
 const MyApp = ({ Component, pageProps, apolloClient }) => {
   const [loading, setLoading] = useState(true)
@@ -53,6 +62,7 @@ const MyApp = ({ Component, pageProps, apolloClient }) => {
               width: 100vw;
               min-height: 100vh;
               display: flex;
+              overflow-y: hidden;
               flex-direction: column;
               background-image: linear-gradient(
                 to right top,
@@ -88,18 +98,19 @@ const MyApp = ({ Component, pageProps, apolloClient }) => {
             input {
               border: none;
             }
-            button:hover {
+            button {
               cursor: pointer;
             }
           `}
         />
         {loading ? (
-          <div>Loading...</div>
+          <Container>
+            <Loader />
+          </Container>
         ) : (
-          <>
-            <Navbar />
+          <Container>
             <Component {...pageProps} />
-          </>
+          </Container>
         )}
       </ThemeProvider>
     </ApolloProvider>

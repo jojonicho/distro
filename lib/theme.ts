@@ -32,6 +32,20 @@ export const colors = {
     c: '#3498DB',
     d: '#884EA0',
   },
+  snazzy: {
+    lightWhite: '#eff0eb',
+    black: '#282a36',
+    red: '#ff5c57',
+    green: '#5af78e',
+    yellow: '#f3f99d',
+    blue: '#57c7ff',
+    magenta: '#ff6ac1',
+    cyan: '#9aedfe',
+    white: '#f1f1f0',
+    lightBlack: '#686868',
+    mekariPurple: '#4E30AF',
+    mekariPurpleLight: '#845EC2',
+  },
 }
 
 export const shadow = {
