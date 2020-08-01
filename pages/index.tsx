@@ -160,8 +160,10 @@ const Home = () => {
               </div>
             </Chat>
             <InputContainer>
-              <form onSubmit={handleSubmit(onSubmit)}>
+              <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
                 <Input
+                  autoComplete="off"
+                  type="search"
                   name="content"
                   placeholder="Message global chat"
                   ref={register({

@@ -20,6 +20,7 @@ const RegisterContainer = styled.div`
 `
 const FormContainer = styled.div`
   background: ${({ theme }) => theme.gradient.rightToLeft};
+  // backdrop-filter: blur(15px);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -43,6 +44,14 @@ const FormContainer = styled.div`
 const Form = styled.form`
   div {
     margin-bottom: 1rem;
+    p {
+      // word-wrap: break-word;
+      // white-space: pre-wrap;
+      // overflow-x: hidden;
+      // word-break: break-all;
+      // overflow-wrap: break-word;
+      // display: inline-block;
+    }
   }
 `
 
@@ -93,10 +102,14 @@ const Register = () => {
               name="username"
               placeholder="raphtalia"
               ref={register({
-                required: 'Required',
+                required: 'username equired.',
+                pattern: {
+                  value: /^.{6,25}$/i,
+                  message: 'username must be between 6 and 25 characters',
+                },
               })}
             />
-            {errors.username && errors.username.message}
+            <p>{errors.username && errors.username.message}</p>
           </div>
           <div>
             <Subtitle text="email" />
@@ -104,7 +117,7 @@ const Register = () => {
               name="email"
               placeholder="raphtalia@bestgirl.com"
               ref={register({
-                required: 'Required',
+                required: 'please provide an email.',
                 pattern: {
                   value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                   message: 'invalid email address',
@@ -121,7 +134,11 @@ const Register = () => {
               name="password"
               autoComplete="new-password"
               ref={register({
-                required: 'Required',
+                required: 'password pls.',
+                pattern: {
+                  value: /^.{8,}$/i,
+                  message: 'password must be atleast 8 characters',
+                },
               })}
             />
             {errors.password && errors.password.message}

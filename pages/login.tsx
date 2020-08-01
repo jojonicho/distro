@@ -11,6 +11,7 @@ import { useRouter } from 'next/router'
 import styled from '@emotion/styled'
 import { Subtitle } from '../components/Subtitle'
 import Link from 'next/link'
+import { ClipLoader as Loader } from 'react-spinners'
 
 const LoginContainer = styled.div`
   display: flex;
@@ -46,6 +47,12 @@ const Form = styled.form`
     margin-bottom: 1rem;
   }
 `
+const LoaderContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+
 const Input = styled.input`
   // margin: 0.4rem 0 0.8rem 0;
   margin: 0.4rem 0;
@@ -77,7 +84,7 @@ const Login = () => {
     shouldFocusError: true,
     shouldUnregister: true,
   })
-  const [login, { client }] = useLoginMutation()
+  const [login, { loading }] = useLoginMutation()
   const onSubmit = async ({ email, password }) => {
     const response = await login({
       variables: {
@@ -111,7 +118,7 @@ const Login = () => {
               placeholder="iloveemilia@rem.com"
               name="email"
               ref={register({
-                required: 'Required',
+                required: 'please provide an email.',
                 pattern: {
                   value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                   message: 'invalid email address',
@@ -128,12 +135,22 @@ const Login = () => {
               name="password"
               autoComplete="new-password"
               ref={register({
-                required: 'Required',
+                required: 'password pls.',
+                pattern: {
+                  value: /^.{8,}$/i,
+                  message: 'password must be atleast 8 characters',
+                },
               })}
             />
             {errors.password && errors.password.message}
           </div>
-          <Input className="submit" type="submit" />
+          {loading ? (
+            <LoaderContainer>
+              <Loader color="white" />
+            </LoaderContainer>
+          ) : (
+            <Input className="submit" type="submit" />
+          )}
         </Form>
       </FormContainer>
       <Link href="/register">or Register for an account</Link>

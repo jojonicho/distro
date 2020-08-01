@@ -107,6 +107,11 @@ const MyApp = ({ Component, pageProps, apolloClient }) => {
             button {
               cursor: pointer;
             }
+            textarea:focus,
+            button:focus,
+            input:focus {
+              outline: none;
+            }
           `}
         />
         {loading ? (
