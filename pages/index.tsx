@@ -80,7 +80,6 @@ type FormData = {
 
 const Home = () => {
   const { data: user, loading: userLoading } = useMeQuery()
-  console.log(user)
   const {
     data: message,
     loading: messageLoading,
@@ -92,16 +91,21 @@ const Home = () => {
     loading: chatLoading,
     error: chatError,
   } = useChatSubscription()
-  const { register, handleSubmit, reset } = useForm<FormData>()
+  const { register, handleSubmit, reset } = useForm<FormData>({
+    mode: 'onSubmit',
+    reValidateMode: 'onChange',
+    shouldFocusError: true,
+    shouldUnregister: true,
+  })
   const [msg] = useSendMessageMutation()
-  const onSubmit = handleSubmit(async ({ content }) => {
+  const onSubmit = async ({ content }) => {
     await msg({
       variables: {
         content,
       },
     })
     reset()
-  })
+  }
   const { data: channels, loading: channelsLoading } = useChannelsQuery()
 
   useEffect(() => {
@@ -156,11 +160,13 @@ const Home = () => {
               </div>
             </Chat>
             <InputContainer>
-              <form onSubmit={onSubmit}>
+              <form onSubmit={handleSubmit(onSubmit)}>
                 <Input
                   name="content"
                   placeholder="Message global chat"
-                  ref={register}
+                  ref={register({
+                    required: 'Required',
+                  })}
                 />
               </form>
             </InputContainer>
