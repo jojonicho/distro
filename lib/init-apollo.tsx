@@ -14,6 +14,14 @@ import { TokenRefreshLink } from 'apollo-link-token-refresh'
 import jwtDecode from 'jwt-decode'
 
 let apolloClient = null
+// const URL = 'distrobackend.herokuapp.com'
+const production = process.env.NODE_ENV === 'production'
+const URL = production
+  ? 'https://distrobackend.herokuapp.com'
+  : 'http://localhost:4000'
+const WEBSOCKET_URL = production
+  ? 'ws://distrobackend.herokuapp.com'
+  : 'ws://localhost:4000'
 
 const create = (initialState, headers) => {
   const cache = new InMemoryCache().restore(initialState || {})
@@ -64,7 +72,7 @@ const create = (initialState, headers) => {
   //   (typeof Blob !== 'undefined' && value instanceof Blob);
 
   const httpLink = new HttpLink({
-    uri: 'http://localhost:4000/graphql',
+    uri: `${URL}/graphql`,
     credentials: 'include',
     fetch,
   })
@@ -72,7 +80,7 @@ const create = (initialState, headers) => {
   // Make sure the wsLink is only created on the browser. The server doesn't have a native implemention for websockets
   const wsLink = process.browser
     ? new WebSocketLink({
-        uri: 'ws://localhost:4000/subscriptions',
+        uri: `${WEBSOCKET_URL}/subscriptions`,
         options: {
           reconnect: true,
         },
@@ -87,10 +95,10 @@ const create = (initialState, headers) => {
     ({ query }) => {
       // @ts-ignore
       const { kind, operation } = getMainDefinition(query)
-
       return (
-        kind === 'OperationDefinition' && operation === 'subscription'
-        //  && process.browser
+        kind === 'OperationDefinition' &&
+        operation === 'subscription' &&
+        process.browser
       )
     },
     // @ts-ignore
@@ -115,7 +123,7 @@ const create = (initialState, headers) => {
         },
         // if access token expires
         fetchAccessToken: () => {
-          return fetch('http://localhost:4000/refresh_token', {
+          return fetch(`http://${URL}/refresh_token`, {
             method: 'POST',
             credentials: 'include',
           })

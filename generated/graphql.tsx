@@ -65,7 +65,6 @@ export type Channel = {
 export type Mutation = {
   __typename?: 'Mutation';
   register: Scalars['Boolean'];
-  confirmEmail: Scalars['Boolean'];
   revokeRefreshTokenUser: Scalars['Boolean'];
   login: LoginResponse;
   logout: Scalars['Boolean'];
@@ -78,11 +77,6 @@ export type Mutation = {
 
 export type MutationRegisterArgs = {
   input: RegisterInput;
-};
-
-
-export type MutationConfirmEmailArgs = {
-  token: Scalars['String'];
 };
 
 

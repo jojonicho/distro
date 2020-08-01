@@ -20,7 +20,6 @@ const RegisterContainer = styled.div`
 `
 const FormContainer = styled.div`
   background: ${({ theme }) => theme.gradient.rightToLeft};
-  margin-top: 20vh;
   display: flex;
   justify-content: center;
   align-items: center;
