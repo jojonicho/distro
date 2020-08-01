@@ -13,6 +13,8 @@ interface ChannelListProps {
 const ChannelContainer = styled.div`
   display: flex;
   flex-direction: column;
+  margin-right: 0.1rem;
+  background: ${({ theme }) => theme.gradient.rightToLeft};
 `
 const AddChannelContainer = styled.div`
   padding: calc(0.3vw + 0.4rem) 1vw;

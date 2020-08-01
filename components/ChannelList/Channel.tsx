@@ -25,7 +25,7 @@ const ChannelContainer = styled.div`
   border-radius: ${({ theme }) => theme.borderRadius.default};
   transition: ${({ theme }) => theme.transitions.boom.transition};
   &:hover {
-    background-color: ${({ theme }) => theme.colors.black.light};
+    background: ${({ theme }) => theme.colors.black.light};
     img {
       transform: scale(1.15);
     }
@@ -36,7 +36,7 @@ const Content = styled.div`
   flex-direction: row;
   align-items: center;
   &:hover {
-    background-color: ${({ theme }) => theme.colors.black.light};
+    background: ${({ theme }) => theme.colors.black.light};
   }
   border-radius: ${({ theme }) => theme.borderRadius.default};
   p {
@@ -50,8 +50,11 @@ const Detail = styled.div<DetailProps>`
   display: ${(props) => (props.open ? 'flex' : 'none')};
   z-index: 20;
   position: fixed;
+  left: calc(1.5vw + 2rem);
   border-radius: ${({ theme }) => theme.borderRadius.default};
-  background: ${({ theme }) => theme.colors.background.ddark};
+  // color: ${({ theme }) => theme.colors.background.ddark};
+  color: ${({ theme }) => theme.colors.white.base};
+  backdrop-filter: blur(30px);
   padding: 10px;
 `
 const Img = styled.img`

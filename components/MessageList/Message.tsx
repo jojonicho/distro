@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import styled from '@emotion/styled'
-import { useDeleteMessageMutation } from '../generated/graphql'
+import { useDeleteMessageMutation } from '../../generated/graphql'
 
 interface MessageProps {
   id: number
@@ -14,28 +14,33 @@ const Content = styled.div`
   flex-direction: row;
   align-items: center;
   &:hover {
-    background-color: ${({ theme }) => theme.colors.black.light};
+    background: ${({ theme }) => theme.colors.black.light};
   }
   border-radius: ${({ theme }) => theme.borderRadius.default};
   p {
-    color: ${({ theme }) => theme.colors.white.grey};
+    color: ${({ theme }) => theme.colors.white.light};
+    font-size: calc(0.8rem + 0.1vw);
+  }
+  h1 {
+    font-size: calc(0.8rem + 0.1vw);
   }
 `
 
 const MessageContainer = styled.div`
-  padding: calc(0.3vw + 0.4rem) 1vw;
+  padding: calc(0.15vw + 0.4rem) 1vw;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: flex-start;
   &:hover {
-    background-color: ${({ theme }) => theme.colors.black.light};
+    background: ${({ theme }) => theme.colors.black.light};
   }
   border-radius: ${({ theme }) => theme.borderRadius.default};
   transition: ${({ theme }) => theme.transitions.boom.transition};
 `
 const Detail = styled.div`
   margin: 0 0.6rem;
+  backdrop-filter: blur(30px);
 `
 const Img = styled.img`
   width: calc(1vw + 1.75rem);

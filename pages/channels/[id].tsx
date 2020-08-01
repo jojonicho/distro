@@ -14,7 +14,7 @@ import {
   useMeQuery,
 } from '../../generated/graphql'
 import { useForm } from 'react-hook-form'
-import { Message } from '../../components/Message'
+import { Message } from '../../components/MessageList/Message'
 import { Channel } from '../../components/ChannelList/Channel'
 import ChannelList from '../../components/ChannelList'
 import { BarLoader } from 'react-spinners'

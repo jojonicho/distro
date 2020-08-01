@@ -9,7 +9,7 @@ import { BarLoader } from 'react-spinners'
 
 const Nav = styled.nav`
   // padding: 1vw 2vw 0 2vw;
-  margin-right: 0.5vw;
+  // margin-right: 0.5vw;
   padding: 2px;
   display: flex;
   justify-content: space-between;
@@ -19,7 +19,19 @@ const Nav = styled.nav`
   position: absolute;
   right: 0;
   // background: ${({ theme }) => theme.colors.snazzy.mekariPurple};
-  backdrop-filter: blur(3px);
+  // border-radius: 5px;
+  backdrop-filter: blur(30px);
+  // border: 1px solid white;
+  // @media (-webkit-min-device-pixel-ratio: 2){
+  //   border-width: 0.5px;
+  // }
+  // backdrop-filter: brightness(60%);
+  // backdrop-filter: contrast(40%);
+  // backdrop-filter: drop-shadow(4px 4px 10px blue);
+  // backdrop-filter: grayscale(30%);
+  // backdrop-filter: hue-rotate(120deg);
+  // backdrop-filter: invert(70%);
+  // backdrop-filter: opacity(20%);
 `
 // const Navlink = styled.div`
 //   a {

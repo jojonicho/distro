@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "predev": "yarn gen",
     "build": "next build",
     "start": "next start",
     "lint": "eslint --fix . && echo 'Lint complete.'",

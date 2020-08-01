@@ -14,7 +14,7 @@ import {
   useLogoutMutation,
 } from '../generated/graphql'
 import { useForm } from 'react-hook-form'
-import { Message } from '../components/Message'
+import { Message } from '../components/MessageList/Message'
 import ChannelList from '../components/ChannelList'
 import Login from './login'
 import { Navbar } from '../components/Navbar'
@@ -44,7 +44,7 @@ const Chat = styled.div`
 `
 const IndexContainer = styled.div`
   height: 100vh;
-  width: 99vw;
+  width: calc(99vw + 0.5rem);
   // margin: 1vw;
   display: flex;
   flex-direction: row;
@@ -156,7 +156,11 @@ const Home = () => {
             </Chat>
             <InputContainer>
               <form onSubmit={onSubmit}>
-                <Input name="content" placeholder="Message" ref={register} />
+                <Input
+                  name="content"
+                  placeholder="Message global chat"
+                  ref={register}
+                />
               </form>
             </InputContainer>
           </ChatContainer>
