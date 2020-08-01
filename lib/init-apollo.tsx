@@ -20,7 +20,7 @@ const URL = production
   ? 'https://distrobackend.herokuapp.com'
   : 'http://localhost:4000'
 const WEBSOCKET_URL = production
-  ? 'ws://distrobackend.herokuapp.com'
+  ? 'wss://distrobackend.herokuapp.com'
   : 'ws://localhost:4000'
 
 const create = (initialState, headers) => {
