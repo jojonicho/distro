@@ -14,14 +14,14 @@ import { TokenRefreshLink } from 'apollo-link-token-refresh'
 import jwtDecode from 'jwt-decode'
 
 let apolloClient = null
-// const URL = 'distrobackend.herokuapp.com'
-const dev = process.env.NODE_ENV === 'development'
-const URL = dev
-  ? 'http://localhost:4000'
-  : 'https://distrobackend.herokuapp.com'
-const WEBSOCKET_URL = dev
-  ? 'ws://localhost:4000'
-  : 'wss://distrobackend.herokuapp.com'
+
+const production = process.env.NODE_ENV === 'production'
+const URL = production
+  ? 'https://distrobackend.herokuapp.com'
+  : 'http://localhost:4000'
+const WEBSOCKET_URL = production
+  ? 'wss://distrobackend.herokuapp.com'
+  : 'ws://localhost:4000'
 
 const create = (initialState, headers) => {
   const cache = new InMemoryCache().restore(initialState || {})

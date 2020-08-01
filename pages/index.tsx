@@ -80,6 +80,7 @@ type FormData = {
 
 const Home = () => {
   const { data: user, loading: userLoading } = useMeQuery()
+  console.log(user)
   const {
     data: message,
     loading: messageLoading,

@@ -27,11 +27,15 @@ const Container = styled.div`
   width: 100vw;
   height: 100vh;
 `
+const production = process.env.NODE_ENV === 'production'
+const URL = production
+  ? 'https://distrobackend.herokuapp.com'
+  : 'http://localhost:4000'
 
 const MyApp = ({ Component, pageProps, apolloClient }) => {
   const [loading, setLoading] = useState(true)
   useEffect(() => {
-    fetch('http://localhost:4000/refresh_token', {
+    fetch(`${URL}/refresh_token`, {
       method: 'POST',
       credentials: 'include',
     }).then(async (x) => {
