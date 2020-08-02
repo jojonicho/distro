@@ -102,12 +102,12 @@ const Home = () => {
   })
   const [msg] = useSendMessageMutation()
   const onSubmit = async ({ content }) => {
+    reset()
     await msg({
       variables: {
         content,
       },
     })
-    reset()
   }
   const { data: channels, loading: channelsLoading } = useChannelsQuery()
 
@@ -175,8 +175,8 @@ const Home = () => {
                   ))
                 )}
                 {chat &&
-                chat.newMessage.user.id !== user.me.id &&
-                chat.newMessage.id !== message.messages.slice(-1)[0].id ? (
+                chat.newMessage.id !==
+                  message.messages[message.messages.length - 1].id ? (
                   <Message
                     id={chat.newMessage.id}
                     image={chat.newMessage.user.image}
