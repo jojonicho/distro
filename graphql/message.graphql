@@ -10,10 +10,11 @@ query Messages {
   }
 }
 
-subscription Chat {
+subscription Message {
   newMessage {
     id
     user {
+      id
       username
       image
     }

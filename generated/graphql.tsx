@@ -221,7 +221,7 @@ export type MeQuery = (
   { __typename?: 'Query' }
   & { me?: Maybe<(
     { __typename?: 'User' }
-    & Pick<User, 'username' | 'email' | 'image'>
+    & Pick<User, 'id' | 'username' | 'email' | 'image'>
   )> }
 );
 
@@ -240,17 +240,17 @@ export type MessagesQuery = (
   )> }
 );
 
-export type ChatSubscriptionVariables = Exact<{ [key: string]: never; }>;
+export type MessageSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ChatSubscription = (
+export type MessageSubscription = (
   { __typename?: 'Subscription' }
   & { newMessage: (
     { __typename?: 'Message' }
     & Pick<Message, 'id' | 'date' | 'content'>
     & { user: (
       { __typename?: 'User' }
-      & Pick<User, 'username' | 'image'>
+      & Pick<User, 'id' | 'username' | 'image'>
     ) }
   ) }
 );
@@ -520,6 +520,7 @@ export type LogoutMutationOptions = ApolloReactCommon.BaseMutationOptions<Logout
 export const MeDocument = gql`
     query Me {
   me {
+    id
     username
     email
     image
@@ -589,11 +590,12 @@ export function useMessagesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHoo
 export type MessagesQueryHookResult = ReturnType<typeof useMessagesQuery>;
 export type MessagesLazyQueryHookResult = ReturnType<typeof useMessagesLazyQuery>;
 export type MessagesQueryResult = ApolloReactCommon.QueryResult<MessagesQuery, MessagesQueryVariables>;
-export const ChatDocument = gql`
-    subscription Chat {
+export const MessageDocument = gql`
+    subscription Message {
   newMessage {
     id
     user {
+      id
       username
       image
     }
@@ -604,25 +606,25 @@ export const ChatDocument = gql`
     `;
 
 /**
- * __useChatSubscription__
+ * __useMessageSubscription__
  *
- * To run a query within a React component, call `useChatSubscription` and pass it any options that fit your needs.
- * When your component renders, `useChatSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useMessageSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useMessageSubscription` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useChatSubscription({
+ * const { data, loading, error } = useMessageSubscription({
  *   variables: {
  *   },
  * });
  */
-export function useChatSubscription(baseOptions?: ApolloReactHooks.SubscriptionHookOptions<ChatSubscription, ChatSubscriptionVariables>) {
-        return ApolloReactHooks.useSubscription<ChatSubscription, ChatSubscriptionVariables>(ChatDocument, baseOptions);
+export function useMessageSubscription(baseOptions?: ApolloReactHooks.SubscriptionHookOptions<MessageSubscription, MessageSubscriptionVariables>) {
+        return ApolloReactHooks.useSubscription<MessageSubscription, MessageSubscriptionVariables>(MessageDocument, baseOptions);
       }
-export type ChatSubscriptionHookResult = ReturnType<typeof useChatSubscription>;
-export type ChatSubscriptionResult = ApolloReactCommon.SubscriptionResult<ChatSubscription>;
+export type MessageSubscriptionHookResult = ReturnType<typeof useMessageSubscription>;
+export type MessageSubscriptionResult = ApolloReactCommon.SubscriptionResult<MessageSubscription>;
 export const SendMessageDocument = gql`
     mutation SendMessage($content: String!) {
   sendMessage(input: {content: $content})

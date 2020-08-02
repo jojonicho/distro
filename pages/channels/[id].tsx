@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import styled from '@emotion/styled'
 import App from '../../components/App'
 import {
-  useChatSubscription,
+  useMessageSubscription,
   useSendMessageMutation,
   useMessagesQuery,
   useChannelsQuery,
@@ -97,7 +97,7 @@ const Home = () => {
     data: chat,
     loading: chatLoading,
     error: chatError,
-  } = useChatSubscription()
+  } = useMessageSubscription()
   const { register, handleSubmit, reset } = useForm<FormData>()
   const [msg] = useSendChannelMessageMutation()
   const onSubmit = handleSubmit(async ({ content }) => {

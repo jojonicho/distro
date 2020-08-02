@@ -3,15 +3,15 @@ import styled from '@emotion/styled'
 import App from '../components/App'
 import Head from 'next/head'
 import {
-  useChatSubscription,
+  useMessageSubscription,
   useSendMessageMutation,
   useMessagesQuery,
-  ChatDocument,
-  ChatSubscriptionVariables,
+  MessageDocument,
   useChannelsQuery,
   useCreateChannelMutation,
   useMeQuery,
-  useLogoutMutation,
+  MessageSubscription as MessageSubscriptionType,
+  // MessagesDocument,
 } from '../generated/graphql'
 import { useForm } from 'react-hook-form'
 import { Message } from '../components/MessageList/Message'
@@ -85,15 +85,18 @@ const Home = () => {
     loading: messageLoading,
     error: messagesError,
     subscribeToMore,
-  } = useMessagesQuery()
+  } = useMessagesQuery({
+    fetchPolicy: 'cache-and-network',
+  })
   const {
     data: chat,
     loading: chatLoading,
     error: chatError,
-  } = useChatSubscription()
-  const { register, handleSubmit, reset } = useForm<FormData>({
+  } = useMessageSubscription()
+  const { register, handleSubmit, reset, errors } = useForm<FormData>({
     mode: 'onSubmit',
     reValidateMode: 'onChange',
+    criteriaMode: 'all',
     shouldFocusError: true,
     shouldUnregister: true,
   })
@@ -108,22 +111,44 @@ const Home = () => {
   }
   const { data: channels, loading: channelsLoading } = useChannelsQuery()
 
+  // useEffect(() => {
+  //   if (!messageLoading && chat) {
+  //     message.messages.push(chat.newMessage)
+  //   }
+  //   // subscribeToMore<ChatSubscriptionVariables>({
+  //   //   document: ChatDocument,
+  //   //   updateQuery: (prev, { subscriptionData }) => {
+  //   //     if (!subscriptionData.data) return prev
+  //   //     const newMessage = subscriptionData.data.messages
+  //   //     return {
+  //   //       messages: [newMessage, ...prev.messages],
+  //   //     }
+  //   //   },
+  //   // })
+  //   // }
+  // }, [subscribeToMore, chat, message])
   useEffect(() => {
     if (!messageLoading && chat) {
       message.messages.push(chat.newMessage)
     }
-    // subscribeToMore<ChatSubscriptionVariables>({
-    //   document: ChatDocument,
-    //   updateQuery: (prev, { subscriptionData }) => {
-    //     if (!subscriptionData.data) return prev
-    //     const newMessage = subscriptionData.data.messages
-    //     return {
-    //       messages: [newMessage, ...prev.messages],
-    //     }
-    //   },
-    // })
-    // }
-  }, [subscribeToMore, chat, message])
+    if (!message && user && user.me.id && chat) {
+      subscribeToMore<MessageSubscriptionType>({
+        document: MessageDocument,
+        updateQuery: (prev, { subscriptionData }) => {
+          if (!subscriptionData) {
+            return prev
+          }
+          const newMessage = subscriptionData.data.newMessage
+          if (user.me.id === newMessage.user.id) {
+            return prev
+          }
+          return {
+            messages: [...prev.messages, newMessage],
+          }
+        },
+      })
+    }
+  }, [subscribeToMore, chat])
 
   return (
     <App title="Distro" description="Recharge yourself!">
@@ -149,14 +174,16 @@ const Home = () => {
                     />
                   ))
                 )}
-                {chatLoading ? null : (
+                {chat &&
+                chat.newMessage.user.id !== user.me.id &&
+                chat.newMessage.id !== message.messages.slice(-1)[0].id ? (
                   <Message
                     id={chat.newMessage.id}
                     image={chat.newMessage.user.image}
                     username={chat.newMessage.user.username}
                     message={chat.newMessage.content}
                   />
-                )}
+                ) : null}
               </div>
             </Chat>
             <InputContainer>
@@ -165,7 +192,11 @@ const Home = () => {
                   autoComplete="off"
                   type="search"
                   name="content"
-                  placeholder="Message global chat"
+                  placeholder={
+                    errors.content
+                      ? errors.content.message
+                      : 'Message global chat'
+                  }
                   ref={register({
                     required: 'Required',
                   })}
