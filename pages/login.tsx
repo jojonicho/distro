@@ -104,7 +104,8 @@ const Login = () => {
       },
     })
     if (response && response.data) {
-      setAccessToken(response.data.login.accessToken)
+      console.log(response.data.login.accessToken)
+      await setAccessToken(response.data.login.accessToken)
       router.push('/')
     }
   }

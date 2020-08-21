@@ -85,7 +85,7 @@ const Index = () => {
     variables,
     subscribeToMore,
   } = useMessagesQuery({
-    // fetchPolicy: 'cache-and-network',
+    fetchPolicy: 'cache-and-network',
     notifyOnNetworkStatusChange: true,
     variables: {
       limit: 20,
