@@ -11,7 +11,7 @@ import {
   useCreateChannelMutation,
   useMeQuery,
   MessageSubscription as MessageSubscriptionType,
-  // MessagesDocument,
+  MessagesQuery,
 } from '../generated/graphql'
 import { useForm } from 'react-hook-form'
 import { Message } from '../components/MessageList/Message'
@@ -19,7 +19,6 @@ import ChannelList from '../components/ChannelList'
 import Login from './login'
 import { Navbar } from '../components/Navbar'
 import { BarLoader } from 'react-spinners'
-// import { Navbar } from '../components/Navbar'
 
 const InputContainer = styled.div`
   padding: calc(0.3vw + 0.3rem);
@@ -45,13 +44,11 @@ const Chat = styled.div`
 const IndexContainer = styled.div`
   height: 100vh;
   width: calc(99vw + 0.5rem);
-  // margin: 1vw;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   color: ${({ theme }) => theme.colors.white.base};
   background: ${({ theme }) => theme.gradient.rightToLeft};
-  // border-radius: ${({ theme }) => theme.borderRadius.default};
 `
 const MemberContainer = styled.div`
   display: flex;
@@ -78,15 +75,22 @@ type FormData = {
   content: string
 }
 
-const Home = () => {
+const Index = () => {
   const { data: user, loading: userLoading } = useMeQuery()
   const {
     data: message,
     loading: messageLoading,
     error: messagesError,
+    fetchMore,
+    variables,
     subscribeToMore,
   } = useMessagesQuery({
-    fetchPolicy: 'cache-and-network',
+    // fetchPolicy: 'cache-and-network',
+    notifyOnNetworkStatusChange: true,
+    variables: {
+      limit: 20,
+      channelId: null,
+    },
   })
   const {
     data: chat,
@@ -111,43 +115,28 @@ const Home = () => {
   }
   const { data: channels, loading: channelsLoading } = useChannelsQuery()
 
-  // useEffect(() => {
-  //   if (!messageLoading && chat) {
-  //     message.messages.push(chat.newMessage)
-  //   }
-  //   // subscribeToMore<ChatSubscriptionVariables>({
-  //   //   document: ChatDocument,
-  //   //   updateQuery: (prev, { subscriptionData }) => {
-  //   //     if (!subscriptionData.data) return prev
-  //   //     const newMessage = subscriptionData.data.messages
-  //   //     return {
-  //   //       messages: [newMessage, ...prev.messages],
-  //   //     }
-  //   //   },
-  //   // })
-  //   // }
-  // }, [subscribeToMore, chat, message])
   useEffect(() => {
     if (!messageLoading && chat) {
-      message.messages.push(chat.newMessage)
+      // message.messages.messages.push(chat.newMessage)
+      message.messages.messages.unshift(chat.newMessage)
     }
-    if (!message && user && user.me.id && chat) {
-      subscribeToMore<MessageSubscriptionType>({
-        document: MessageDocument,
-        updateQuery: (prev, { subscriptionData }) => {
-          if (!subscriptionData) {
-            return prev
-          }
-          const newMessage = subscriptionData.data.newMessage
-          if (user.me.id === newMessage.user.id) {
-            return prev
-          }
-          return {
-            messages: [...prev.messages, newMessage],
-          }
-        },
-      })
-    }
+    // if (!message && user && user.me.id && chat) {
+    //   subscribeToMore<MessageSubscriptionType>({
+    //     document: MessageDocument,
+    //     updateQuery: (prev, { subscriptionData }) => {
+    //       if (!subscriptionData) {
+    //         return prev
+    //       }
+    //       const newMessage = subscriptionData.data.newMessage
+    //       if (user.me.id === newMessage.user.id) {
+    //         return prev
+    //       }
+    //       return {
+    //         messages: [...prev.messages.messages, newMessage],
+    //       }
+    //     },
+    //   })
+    // }
   }, [subscribeToMore, chat])
 
   return (
@@ -160,31 +149,63 @@ const Home = () => {
           <ChannelList channels={channels} loading={channelsLoading} />
           <ChatContainer>
             <Chat>
-              <div>
-                {messageLoading ? (
-                  <BarLoader />
-                ) : (
-                  message.messages.map((msg) => (
-                    <Message
-                      key={msg.id}
-                      id={msg.id}
-                      image={msg.user.image}
-                      username={msg.user.username}
-                      message={msg.content}
-                    />
-                  ))
-                )}
-                {chat &&
+              {messageLoading ? (
+                <BarLoader />
+              ) : (
+                message.messages.messages.map((msg) => (
+                  <Message
+                    key={msg.id}
+                    id={msg.id}
+                    image={msg.user.image}
+                    username={msg.user.username}
+                    message={msg.content}
+                    user={user.me}
+                  />
+                ))
+              )}
+              <button
+                onClick={() => {
+                  fetchMore({
+                    variables: {
+                      limit: variables?.limit,
+                      cursor:
+                        message.messages.messages[
+                          message.messages.messages.length - 1
+                        ].date,
+                    },
+                    // updateQuery: (prev, { fetchMoreResult }): MessagesQuery => {
+                    //   if (!fetchMoreResult) {
+                    //     return prev as MessagesQuery
+                    //   }
+                    //   return {
+                    //     __typename: 'Query',
+                    //     messages: {
+                    //       __typename: 'PaginatedMessages',
+                    //       hasMore: (fetchMoreResult as MessagesQuery).messages
+                    //         .hasMore,
+                    //       messages: [
+                    //         ...(prev as MessagesQuery).messages.messages,
+                    //         ...(fetchMoreResult as MessagesQuery).messages
+                    //           .messages,
+                    //       ],
+                    //     },
+                    //   }
+                    // },
+                  })
+                }}
+              >
+                load more
+              </button>
+              {/* {chat &&
                 chat.newMessage.id !==
-                  message.messages[message.messages.length - 1].id ? (
+                  message.messages[message.messages.messages.length - 1].id ? (
                   <Message
                     id={chat.newMessage.id}
                     image={chat.newMessage.user.image}
                     username={chat.newMessage.user.username}
                     message={chat.newMessage.content}
                   />
-                ) : null}
-              </div>
+                ) : null} */}
             </Chat>
             <InputContainer>
               <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
@@ -212,5 +233,4 @@ const Home = () => {
     </App>
   )
 }
-
-export default Home
+export default Index

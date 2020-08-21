@@ -1,12 +1,15 @@
-query Messages {
-  messages {
-    id
-    user {
-      username
-      image
+query Messages($limit: Int!, $cursor: String, $channelId: Int) {
+  messages(limit: $limit, cursor: $cursor, channelId: $channelId) {
+    messages {
+      id
+      user {
+        username
+        image
+      }
+      date
+      content
     }
-    date
-    content
+    hasMore
   }
 }
 

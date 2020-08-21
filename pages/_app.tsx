@@ -1,24 +1,15 @@
 import App from 'next/app'
-import withGA from 'next-ga'
 import NProgress from 'nprogress'
 import { ApolloProvider } from '@apollo/react-hooks'
 import Router from 'next/router'
 import withApolloClient from '../lib/with-apollo-client'
-// import { GA_ID } from '../constants'
+
 import React, { useState, useEffect } from 'react'
 import { ThemeProvider, css, Global } from '@emotion/react'
 import { setAccessToken } from '../lib/accessToken'
-import { Navbar } from '../components/Navbar'
 import { HashLoader as Loader } from 'react-spinners'
 import theme from '../lib/theme'
 import styled from '@emotion/styled'
-import { useMeQuery } from '../generated/graphql'
-
-Router.events.on('routeChangeStart', () => {
-  NProgress.start()
-})
-Router.events.on('routeChangeComplete', () => NProgress.done())
-Router.events.on('routeChangeError', () => NProgress.done())
 
 const Container = styled.div`
   display: flex;

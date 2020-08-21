@@ -9,17 +9,19 @@ mutation CreateChannel($name: String!) {
   createChannel(name: $name)
 }
 
-query ChannelMessages($channelId: Int!) {
-  channelMessages(channelId: $channelId) {
-    id
-    user {
-      username
-      image
-    }
-    date
-    content
-  }
-}
+# query ChannelMessages($channelId: Int!, $limit: Int!) {
+#   channelMessages(channelId: $channelId, limit: $limit) {
+#     messages {
+#       id
+#       user {
+#         username
+#         image
+#       }
+#       date
+#       content
+#     }
+#   }
+# }
 
 query ChannelUsers($channelId: Int!) {
   channelUsers(channelId: $channelId) {

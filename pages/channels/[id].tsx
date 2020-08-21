@@ -8,7 +8,6 @@ import {
   useMessagesQuery,
   useChannelsQuery,
   useCreateChannelMutation,
-  useChannelMessagesQuery,
   useSendChannelMessageMutation,
   useChannelUsersQuery,
   useMeQuery,
@@ -91,38 +90,64 @@ const Home = () => {
     data: message,
     loading: messageLoading,
     error: messagesError,
+    fetchMore,
     subscribeToMore,
-  } = useChannelMessagesQuery({ variables: { channelId } })
+  } = useMessagesQuery({
+    fetchPolicy: 'cache-and-network',
+    variables: {
+      limit: 25,
+      channelId,
+    },
+  })
   const {
     data: chat,
     loading: chatLoading,
     error: chatError,
   } = useMessageSubscription()
-  const { register, handleSubmit, reset } = useForm<FormData>()
-  const [msg] = useSendChannelMessageMutation()
-  const onSubmit = handleSubmit(async ({ content }) => {
+  const { register, handleSubmit, reset, errors } = useForm<FormData>({
+    mode: 'onSubmit',
+    reValidateMode: 'onChange',
+    criteriaMode: 'all',
+    shouldFocusError: true,
+    shouldUnregister: true,
+  })
+  const [msg] = useSendMessageMutation()
+  const onSubmit = async ({ content }) => {
+    reset()
     await msg({
       variables: {
         content,
-        channelId,
       },
     })
-    reset()
-  })
+  }
   const { data: channels, loading: channelsLoading } = useChannelsQuery()
-  const { data: users, loading: usersLoading } = useChannelUsersQuery({
-    variables: {
-      channelId,
-    },
-  })
+
   useEffect(() => {
     if (!messageLoading && chat) {
-      message.channelMessages.push(chat.newMessage)
+      // message.messages.messages.push(chat.newMessage)
+      message.messages.messages.unshift(chat.newMessage)
     }
-  }, [subscribeToMore, chat, message])
+    // if (!message && user && user.me.id && chat) {
+    //   subscribeToMore<MessageSubscriptionType>({
+    //     document: MessageDocument,
+    //     updateQuery: (prev, { subscriptionData }) => {
+    //       if (!subscriptionData) {
+    //         return prev
+    //       }
+    //       const newMessage = subscriptionData.data.newMessage
+    //       if (user.me.id === newMessage.user.id) {
+    //         return prev
+    //       }
+    //       return {
+    //         messages: [...prev.messages.messages, newMessage],
+    //       }
+    //     },
+    //   })
+    // }
+  }, [subscribeToMore, chat])
 
   return (
-    <App title="Distro" description="Distro, the productivity app">
+    <App title="Distro" description="Recharge yourself!">
       {userLoading ? (
         <BarLoader />
       ) : user && user.me ? (
@@ -131,45 +156,50 @@ const Home = () => {
           <ChannelList channels={channels} loading={channelsLoading} />
           <ChatContainer>
             <Chat>
-              <div>
-                {messageLoading ? (
-                  <BarLoader />
-                ) : message ? (
-                  message.channelMessages.map((msg) => (
-                    <Message
-                      key={msg.id}
-                      id={msg.id}
-                      image={msg.user.image}
-                      username={msg.user.username}
-                      message={msg.content}
-                    />
-                  ))
-                ) : null}
-                {chatLoading ? null : (
+              {messageLoading ? (
+                <BarLoader />
+              ) : (
+                message.messages.messages.map((msg) => (
+                  <Message
+                    key={msg.id}
+                    id={msg.id}
+                    image={msg.user.image}
+                    username={msg.user.username}
+                    message={msg.content}
+                    user={user.me}
+                  />
+                ))
+              )}
+              {/* {chat &&
+                chat.newMessage.id !==
+                  message.messages[message.messages.messages.length - 1].id ? (
                   <Message
                     id={chat.newMessage.id}
                     image={chat.newMessage.user.image}
                     username={chat.newMessage.user.username}
                     message={chat.newMessage.content}
                   />
-                )}
-              </div>
+                ) : null} */}
             </Chat>
             <InputContainer>
-              <form onSubmit={onSubmit}>
-                <Input name="content" placeholder="Message" ref={register} />
+              <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
+                <Input
+                  autoComplete="off"
+                  type="search"
+                  name="content"
+                  placeholder={
+                    errors.content
+                      ? errors.content.message
+                      : 'Message global chat'
+                  }
+                  ref={register({
+                    required: 'Required',
+                  })}
+                />
               </form>
             </InputContainer>
           </ChatContainer>
-          <ChannelContainer>
-            {usersLoading ? (
-              <BarLoader />
-            ) : users ? (
-              users.channelUsers.map((user) => (
-                <Channel id={user.id} image={user.image} name={user.username} />
-              ))
-            ) : null}
-          </ChannelContainer>
+          <MemberContainer></MemberContainer>
         </IndexContainer>
       ) : (
         <Login />

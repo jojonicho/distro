@@ -1,4 +1,5 @@
 import { ApolloClient } from 'apollo-client'
+// import { InMemoryCache } from '@apollo/client'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import { ApolloLink, Observable, split } from 'apollo-link'
 // import { BatchHttpLink } from "apollo-link-batch-http";

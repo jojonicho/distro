@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
 import styled from '@emotion/styled'
-import { useDeleteMessageMutation } from '../../generated/graphql'
+import { useDeleteMessageMutation, User } from '../../generated/graphql'
 
 interface MessageProps {
   id: number
   image: string
   username: string
   message: string
+  user: User
 }
 
 const Content = styled.div`
@@ -27,13 +28,16 @@ const Content = styled.div`
 `
 
 const MessageContainer = styled.div`
-  padding: calc(0.15vw + 0.4rem) 1vw;
+  padding: calc(0.15vw + 0.3rem);
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: flex-star;
   &:hover {
     background: ${({ theme }) => theme.colors.black.light};
+    img {
+      border-radius: ${({ theme }) => theme.borderRadius.default};
+    }
   }
   border-radius: ${({ theme }) => theme.borderRadius.default};
   transition: ${({ theme }) => theme.transitions.boom.transition};
@@ -49,7 +53,8 @@ const Img = styled.img`
 `
 
 const SettingsContainer = styled.div`
-  margin: 0 0.5rem;
+  margin: 1rem 0;
+  padding: 0 0.2rem;
   display: flex;
   flex-direction: column;
   background-color: ${({ theme }) => theme.colors.black.light};
@@ -64,12 +69,14 @@ const SettingsContainer = styled.div`
 
 const Button = styled.button`
   background: transparent;
-  padding: calc(0.04vw + 0.1rem);
+  // padding: calc(0.01vw + 0.1rem);
+  padding: 0;
   border: none;
   font-weight: bold;
   color: ${({ theme }) => theme.colors.white.grey};
   h1 {
     margin-top: -10px;
+    padding: 0;
   }
 `
 
@@ -78,6 +85,7 @@ export const Message: React.FC<MessageProps> = ({
   image,
   username,
   message,
+  user,
 }) => {
   const [open, setOpen] = useState(false)
   const [deleteMessage] = useDeleteMessageMutation()
@@ -98,12 +106,14 @@ export const Message: React.FC<MessageProps> = ({
           <p>{message}</p>
         </Detail>
       </Content>
-      <SettingsContainer>
-        <Button onClick={onClick}>
-          <h1>...</h1>
-        </Button>
-        {open ? <>unsent</> : null}
-      </SettingsContainer>
+      {user.username === username && (
+        <SettingsContainer>
+          <Button onClick={onClick}>
+            <h1>...</h1>
+          </Button>
+          {open ? <>unsent</> : null}
+        </SettingsContainer>
+      )}
     </MessageContainer>
   )
 }

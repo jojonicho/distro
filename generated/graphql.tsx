@@ -19,14 +19,23 @@ export type Query = {
   hello: Scalars['String'];
   me?: Maybe<User>;
   users: Array<User>;
-  messages: Array<Message>;
-  channelMessages: Array<Message>;
+  messages: PaginatedMessages;
+  channelMessages: PaginatedMessages;
   channels: Array<Channel>;
   channelUsers: Array<User>;
 };
 
 
+export type QueryMessagesArgs = {
+  channelId?: Maybe<Scalars['Int']>;
+  cursor?: Maybe<Scalars['String']>;
+  limit: Scalars['Int'];
+};
+
+
 export type QueryChannelMessagesArgs = {
+  cursor?: Maybe<Scalars['String']>;
+  limit: Scalars['Int'];
   channelId: Scalars['Int'];
 };
 
@@ -41,7 +50,8 @@ export type User = {
   email: Scalars['String'];
   username: Scalars['String'];
   image: Scalars['String'];
-  messages: Array<Message>;
+  messages?: Maybe<Array<Message>>;
+  channels?: Maybe<Array<Channel>>;
 };
 
 export type Message = {
@@ -50,7 +60,7 @@ export type Message = {
   date: Scalars['DateTime'];
   content: Scalars['String'];
   user: User;
-  channel: Channel;
+  channel?: Maybe<Channel>;
 };
 
 
@@ -60,6 +70,13 @@ export type Channel = {
   name: Scalars['String'];
   users: Array<User>;
   image: Scalars['String'];
+  messages: Array<Message>;
+};
+
+export type PaginatedMessages = {
+  __typename?: 'PaginatedMessages';
+  messages: Array<Message>;
+  hasMore: Scalars['Boolean'];
 };
 
 export type Mutation = {
@@ -158,23 +175,6 @@ export type CreateChannelMutation = (
   & Pick<Mutation, 'createChannel'>
 );
 
-export type ChannelMessagesQueryVariables = Exact<{
-  channelId: Scalars['Int'];
-}>;
-
-
-export type ChannelMessagesQuery = (
-  { __typename?: 'Query' }
-  & { channelMessages: Array<(
-    { __typename?: 'Message' }
-    & Pick<Message, 'id' | 'date' | 'content'>
-    & { user: (
-      { __typename?: 'User' }
-      & Pick<User, 'username' | 'image'>
-    ) }
-  )> }
-);
-
 export type ChannelUsersQueryVariables = Exact<{
   channelId: Scalars['Int'];
 }>;
@@ -225,19 +225,27 @@ export type MeQuery = (
   )> }
 );
 
-export type MessagesQueryVariables = Exact<{ [key: string]: never; }>;
+export type MessagesQueryVariables = Exact<{
+  limit: Scalars['Int'];
+  cursor?: Maybe<Scalars['String']>;
+  channelId?: Maybe<Scalars['Int']>;
+}>;
 
 
 export type MessagesQuery = (
   { __typename?: 'Query' }
-  & { messages: Array<(
-    { __typename?: 'Message' }
-    & Pick<Message, 'id' | 'date' | 'content'>
-    & { user: (
-      { __typename?: 'User' }
-      & Pick<User, 'username' | 'image'>
-    ) }
-  )> }
+  & { messages: (
+    { __typename?: 'PaginatedMessages' }
+    & Pick<PaginatedMessages, 'hasMore'>
+    & { messages: Array<(
+      { __typename?: 'Message' }
+      & Pick<Message, 'id' | 'date' | 'content'>
+      & { user: (
+        { __typename?: 'User' }
+        & Pick<User, 'username' | 'image'>
+      ) }
+    )> }
+  ) }
 );
 
 export type MessageSubscriptionVariables = Exact<{ [key: string]: never; }>;
@@ -374,45 +382,6 @@ export function useCreateChannelMutation(baseOptions?: ApolloReactHooks.Mutation
 export type CreateChannelMutationHookResult = ReturnType<typeof useCreateChannelMutation>;
 export type CreateChannelMutationResult = ApolloReactCommon.MutationResult<CreateChannelMutation>;
 export type CreateChannelMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateChannelMutation, CreateChannelMutationVariables>;
-export const ChannelMessagesDocument = gql`
-    query ChannelMessages($channelId: Int!) {
-  channelMessages(channelId: $channelId) {
-    id
-    user {
-      username
-      image
-    }
-    date
-    content
-  }
-}
-    `;
-
-/**
- * __useChannelMessagesQuery__
- *
- * To run a query within a React component, call `useChannelMessagesQuery` and pass it any options that fit your needs.
- * When your component renders, `useChannelMessagesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useChannelMessagesQuery({
- *   variables: {
- *      channelId: // value for 'channelId'
- *   },
- * });
- */
-export function useChannelMessagesQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<ChannelMessagesQuery, ChannelMessagesQueryVariables>) {
-        return ApolloReactHooks.useQuery<ChannelMessagesQuery, ChannelMessagesQueryVariables>(ChannelMessagesDocument, baseOptions);
-      }
-export function useChannelMessagesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<ChannelMessagesQuery, ChannelMessagesQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<ChannelMessagesQuery, ChannelMessagesQueryVariables>(ChannelMessagesDocument, baseOptions);
-        }
-export type ChannelMessagesQueryHookResult = ReturnType<typeof useChannelMessagesQuery>;
-export type ChannelMessagesLazyQueryHookResult = ReturnType<typeof useChannelMessagesLazyQuery>;
-export type ChannelMessagesQueryResult = ApolloReactCommon.QueryResult<ChannelMessagesQuery, ChannelMessagesQueryVariables>;
 export const ChannelUsersDocument = gql`
     query ChannelUsers($channelId: Int!) {
   channelUsers(channelId: $channelId) {
@@ -553,15 +522,18 @@ export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = ApolloReactCommon.QueryResult<MeQuery, MeQueryVariables>;
 export const MessagesDocument = gql`
-    query Messages {
-  messages {
-    id
-    user {
-      username
-      image
+    query Messages($limit: Int!, $cursor: String, $channelId: Int) {
+  messages(limit: $limit, cursor: $cursor, channelId: $channelId) {
+    messages {
+      id
+      user {
+        username
+        image
+      }
+      date
+      content
     }
-    date
-    content
+    hasMore
   }
 }
     `;
@@ -578,6 +550,9 @@ export const MessagesDocument = gql`
  * @example
  * const { data, loading, error } = useMessagesQuery({
  *   variables: {
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
+ *      channelId: // value for 'channelId'
  *   },
  * });
  */
