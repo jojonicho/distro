@@ -173,24 +173,25 @@ const Index = () => {
                           message.messages.messages.length - 1
                         ].date,
                     },
-                    // updateQuery: (prev, { fetchMoreResult }): MessagesQuery => {
-                    //   if (!fetchMoreResult) {
-                    //     return prev as MessagesQuery
-                    //   }
-                    //   return {
-                    //     __typename: 'Query',
-                    //     messages: {
-                    //       __typename: 'PaginatedMessages',
-                    //       hasMore: (fetchMoreResult as MessagesQuery).messages
-                    //         .hasMore,
-                    //       messages: [
-                    //         ...(prev as MessagesQuery).messages.messages,
-                    //         ...(fetchMoreResult as MessagesQuery).messages
-                    //           .messages,
-                    //       ],
-                    //     },
-                    //   }
-                    // },
+                    // doesnt work
+                    updateQuery: (prev, { fetchMoreResult }): MessagesQuery => {
+                      if (!fetchMoreResult) {
+                        return prev as MessagesQuery
+                      }
+                      return {
+                        __typename: 'Query',
+                        messages: {
+                          __typename: 'PaginatedMessages',
+                          hasMore: (fetchMoreResult as MessagesQuery).messages
+                            .hasMore,
+                          messages: [
+                            ...(prev as MessagesQuery).messages.messages,
+                            ...(fetchMoreResult as MessagesQuery).messages
+                              .messages,
+                          ],
+                        },
+                      }
+                    },
                   })
                 }}
               >
