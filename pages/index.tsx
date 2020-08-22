@@ -106,24 +106,24 @@ const Index = () => {
   })
   const [msg] = useSendMessageMutation()
   const onSubmit = async ({ content }) => {
-    reset()
     await msg({
       variables: {
         content,
       },
     })
+    reset()
   }
   const { data: channels, loading: channelsLoading } = useChannelsQuery()
 
   useEffect(() => {
-    if (!messageLoading && chat) {
+    if (!messageLoading && chat.newMessage) {
       // message.messages.messages.push(chat.newMessage)
       message.messages.messages.unshift(chat.newMessage)
     }
     // if (!message && user && user.me.id && chat) {
     //   subscribeToMore<MessageSubscriptionType>({
     //     document: MessageDocument,
-    //     updateQuery: (prev, { subscriptionData }) => {
+    //     updateQuery: (prev, { subscriptionData }): MessagesQuery => {
     //       if (!subscriptionData) {
     //         return prev
     //       }
@@ -132,12 +132,26 @@ const Index = () => {
     //         return prev
     //       }
     //       return {
-    //         messages: [...prev.messages.messages, newMessage],
+    //         __typename: 'Query',
+    //         messages: {
+    //           __typename: 'PaginatedMessages',
+    //           hasMore: false,
+    //           messages: [
+    //             ...(prev as MessagesQuery).messages.messages,
+    //             ...[subscriptionData.data.newMessage],
+    //           ],
+    //         },
     //       }
+    //     },
+    //     variables: {
+    //       limit: variables?.limit,
+    //       cursor:
+    //         message.messages.messages[message.messages.messages.length - 1]
+    //           .date,
     //     },
     //   })
     // }
-  }, [subscribeToMore, chat])
+  }, [chat])
 
   return (
     <App title="Distro" description="Recharge yourself!">
@@ -197,16 +211,19 @@ const Index = () => {
               >
                 load more
               </button>
-              {/* {chat &&
-                chat.newMessage.id !==
-                  message.messages[message.messages.messages.length - 1].id ? (
-                  <Message
-                    id={chat.newMessage.id}
-                    image={chat.newMessage.user.image}
-                    username={chat.newMessage.user.username}
-                    message={chat.newMessage.content}
-                  />
-                ) : null} */}
+              {chat && chat.newMessage ? (
+                // {chat &&
+                // chat.newMessage.id !==
+                //   message.messages.messages[message.messages.messages.length - 1]
+                //     .id ? (
+                <Message
+                  id={chat.newMessage.id}
+                  image={chat.newMessage.user.image}
+                  username={chat.newMessage.user.username}
+                  message={chat.newMessage.content}
+                  user={user.me}
+                />
+              ) : null}
             </Chat>
             <InputContainer>
               <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">

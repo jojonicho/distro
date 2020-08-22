@@ -170,16 +170,16 @@ const Home = () => {
                   />
                 ))
               )}
-              {/* {chat &&
-                chat.newMessage.id !==
-                  message.messages[message.messages.messages.length - 1].id ? (
-                  <Message
-                    id={chat.newMessage.id}
-                    image={chat.newMessage.user.image}
-                    username={chat.newMessage.user.username}
-                    message={chat.newMessage.content}
-                  />
-                ) : null} */}
+              {chat &&
+              chat.newMessage.id !== message.messages.messages[0].id ? (
+                <Message
+                  id={chat.newMessage.id}
+                  image={chat.newMessage.user.image}
+                  username={chat.newMessage.user.username}
+                  message={chat.newMessage.content}
+                  user={user.me}
+                />
+              ) : null}
             </Chat>
             <InputContainer>
               <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
