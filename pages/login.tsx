@@ -104,10 +104,9 @@ const Login = () => {
       },
     })
     if (response && response.data) {
-      console.log(response.data.login.accessToken)
-      await setAccessToken(response.data.login.accessToken)
-      router.push('/')
+      setAccessToken(response.data.login.accessToken)
     }
+    router.push('/')
   }
   return (
     <LoginContainer>

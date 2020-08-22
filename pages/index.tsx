@@ -86,7 +86,7 @@ const Index = () => {
     subscribeToMore,
   } = useMessagesQuery({
     fetchPolicy: 'cache-and-network',
-    notifyOnNetworkStatusChange: true,
+    // notifyOnNetworkStatusChange: true,
     variables: {
       limit: 20,
       channelId: null,
