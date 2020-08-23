@@ -10,8 +10,6 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  /** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
-  DateTime: any;
 };
 
 export type Query = {
@@ -57,12 +55,11 @@ export type User = {
 export type Message = {
   __typename?: 'Message';
   id: Scalars['Int'];
-  date: Scalars['DateTime'];
+  date: Scalars['String'];
   content: Scalars['String'];
   user: User;
   channel?: Maybe<Channel>;
 };
-
 
 export type Channel = {
   __typename?: 'Channel';
