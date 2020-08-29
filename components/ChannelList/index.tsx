@@ -1,9 +1,28 @@
 import React, { useState } from 'react'
 import { Channel } from './Channel'
 import styled from '@emotion/styled'
-import { useCreateChannelMutation } from '../../generated/graphql'
+import {
+  useCreateChannelMutation,
+  CreateChannelMutationVariables,
+} from '../../generated/graphql'
 import { BarLoader } from 'react-spinners'
 import Link from 'next/link'
+import {
+  useDisclosure,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalCloseButton,
+  ModalBody,
+  Stack,
+  FormLabel,
+  Badge,
+  Input,
+  Button as ChakraButton,
+  FormControl,
+} from '@chakra-ui/core'
+import { colors } from '../../lib/theme'
+import { useForm } from 'react-hook-form'
 
 interface ChannelListProps {
   loading: boolean
@@ -24,9 +43,6 @@ const AddChannelContainer = styled.div`
   align-items: center;
   border-radius: ${({ theme }) => theme.borderRadius.default};
   transition: ${({ theme }) => theme.transitions.boom.transition};
-  input {
-    width: 60%;
-  }
 `
 const Button = styled.button`
   border-radius: ${({ theme }) => theme.borderRadius.round};
@@ -43,13 +59,14 @@ const Button = styled.button`
 `
 
 const ChannelList: React.FC<ChannelListProps> = ({ loading, channels }) => {
-  const [channelName, setChannelName] = useState('')
   const [chn] = useCreateChannelMutation()
-  const onClick = async () => {
-    if (channelName !== '') {
+  const { handleSubmit, register, formState } = useForm()
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const onSubmit = async ({ name }: CreateChannelMutationVariables) => {
+    if (name !== '') {
       await chn({
         variables: {
-          name: channelName,
+          name,
         },
       })
     }
@@ -69,7 +86,50 @@ const ChannelList: React.FC<ChannelListProps> = ({ loading, channels }) => {
             <Channel id={chn.id} image={chn.image} name={chn.name} />
           ))}
           <AddChannelContainer>
-            <Button onClick={onClick}>+</Button>
+            <Button onClick={onOpen}>+</Button>
+
+            <Modal isOpen={isOpen} onClose={onClose} isCentered>
+              <ModalOverlay style={{ backdropFilter: 'blur(4px)' }} />
+              <ModalContent
+                rounded="0.4rem"
+                bg={colors.background.ddark}
+                color={colors.white.base}
+                width="550px"
+                p={3}
+              >
+                <ModalCloseButton />
+                <ModalBody>
+                  <form onSubmit={handleSubmit(onSubmit)}>
+                    <FormControl>
+                      <Stack spacing={3} align="center" justify="center">
+                        <FormLabel>
+                          <Badge>Channel Name</Badge>
+                        </FormLabel>
+                        <Input
+                          p={3}
+                          variant="outline"
+                          placeholder="Super Secret Group"
+                          name="name"
+                          ref={register}
+                          color={colors.black.base}
+                        />
+                        <ChakraButton
+                          mt={4}
+                          p={3}
+                          borderRadius={3}
+                          background={colors.secondary.base}
+                          isLoading={formState.isSubmitting}
+                          onClick={handleSubmit(onSubmit)}
+                          type="submit"
+                        >
+                          Submit
+                        </ChakraButton>
+                      </Stack>
+                    </FormControl>
+                  </form>
+                </ModalBody>
+              </ModalContent>
+            </Modal>
           </AddChannelContainer>
         </>
       )}

@@ -1,16 +1,15 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { useRouter } from 'next/router'
 import styled from '@emotion/styled'
-import App from '../../components/App'
 import {
   useMessageSubscription,
   useSendMessageMutation,
   useMessagesQuery,
   useChannelsQuery,
   useCreateChannelMutation,
-  useSendChannelMessageMutation,
   useChannelUsersQuery,
   useMeQuery,
+  MessagesQuery,
 } from '../../generated/graphql'
 import { useForm } from 'react-hook-form'
 import { Message } from '../../components/MessageList/Message'
@@ -89,9 +88,8 @@ const Home = () => {
   const {
     data: message,
     loading: messageLoading,
-    error: messagesError,
     fetchMore,
-    subscribeToMore,
+    variables,
   } = useMessagesQuery({
     fetchPolicy: 'cache-and-network',
     variables: {
@@ -99,11 +97,11 @@ const Home = () => {
       channelId,
     },
   })
-  const {
-    data: chat,
-    loading: chatLoading,
-    error: chatError,
-  } = useMessageSubscription()
+  const { data: chat } = useMessageSubscription({
+    onSubscriptionData: ({ subscriptionData }) => {
+      message.messages.messages.unshift(subscriptionData.data.newMessage)
+    },
+  })
   const { register, handleSubmit, reset, errors } = useForm<FormData>({
     mode: 'onSubmit',
     reValidateMode: 'onChange',
@@ -111,43 +109,20 @@ const Home = () => {
     shouldFocusError: true,
     shouldUnregister: true,
   })
-  const [msg] = useSendMessageMutation()
+  const [msg] = useSendMessageMutation({})
   const onSubmit = async ({ content }) => {
     reset()
     await msg({
       variables: {
         content,
+        channelId,
       },
     })
   }
   const { data: channels, loading: channelsLoading } = useChannelsQuery()
 
-  useEffect(() => {
-    if (!messageLoading && chat) {
-      // message.messages.messages.push(chat.newMessage)
-      message.messages.messages.unshift(chat.newMessage)
-    }
-    // if (!message && user && user.me.id && chat) {
-    //   subscribeToMore<MessageSubscriptionType>({
-    //     document: MessageDocument,
-    //     updateQuery: (prev, { subscriptionData }) => {
-    //       if (!subscriptionData) {
-    //         return prev
-    //       }
-    //       const newMessage = subscriptionData.data.newMessage
-    //       if (user.me.id === newMessage.user.id) {
-    //         return prev
-    //       }
-    //       return {
-    //         messages: [...prev.messages.messages, newMessage],
-    //       }
-    //     },
-    //   })
-    // }
-  }, [subscribeToMore, chat])
-
   return (
-    <App title="Distro" description="Recharge yourself!">
+    <>
       {userLoading ? (
         <BarLoader />
       ) : user && user.me ? (
@@ -159,27 +134,70 @@ const Home = () => {
               {messageLoading ? (
                 <BarLoader />
               ) : (
-                message.messages.messages.map((msg) => (
-                  <Message
-                    key={msg.id}
-                    id={msg.id}
-                    image={msg.user.image}
-                    username={msg.user.username}
-                    message={msg.content}
-                    user={user.me}
-                  />
-                ))
+                <Chat>
+                  {chat &&
+                  chat.newMessage &&
+                  (message.messages.messages.length == 0 ||
+                    chat.newMessage.id !== message.messages.messages[0].id) ? (
+                    <Message
+                      id={chat.newMessage.id}
+                      image={chat.newMessage.user.image}
+                      username={chat.newMessage.user.username}
+                      message={chat.newMessage.content}
+                      user={user.me}
+                    />
+                  ) : null}
+                  {message.messages.messages.map((msg) => (
+                    <Message
+                      key={msg.id}
+                      id={msg.id}
+                      image={msg.user.image}
+                      username={msg.user.username}
+                      message={msg.content}
+                      user={user.me}
+                    />
+                  ))}
+                  {message.messages.hasMore && (
+                    <button
+                      onClick={() => {
+                        fetchMore({
+                          variables: {
+                            limit: variables?.limit,
+                            cursor:
+                              message.messages.messages[
+                                message.messages.messages.length - 1
+                              ].date,
+                          },
+                          // doesnt work
+                          updateQuery: (
+                            prev,
+                            { fetchMoreResult }
+                          ): MessagesQuery => {
+                            if (!fetchMoreResult) {
+                              return prev as MessagesQuery
+                            }
+                            return {
+                              __typename: 'Query',
+                              messages: {
+                                __typename: 'PaginatedMessages',
+                                hasMore: (fetchMoreResult as MessagesQuery)
+                                  .messages.hasMore,
+                                messages: [
+                                  ...(prev as MessagesQuery).messages.messages,
+                                  ...(fetchMoreResult as MessagesQuery).messages
+                                    .messages,
+                                ],
+                              },
+                            }
+                          },
+                        })
+                      }}
+                    >
+                      load more
+                    </button>
+                  )}
+                </Chat>
               )}
-              {chat &&
-              chat.newMessage.id !== message.messages.messages[0].id ? (
-                <Message
-                  id={chat.newMessage.id}
-                  image={chat.newMessage.user.image}
-                  username={chat.newMessage.user.username}
-                  message={chat.newMessage.content}
-                  user={user.me}
-                />
-              ) : null}
             </Chat>
             <InputContainer>
               <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
@@ -204,7 +222,7 @@ const Home = () => {
       ) : (
         <Login />
       )}
-    </App>
+    </>
   )
 }
 

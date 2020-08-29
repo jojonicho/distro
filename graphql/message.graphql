@@ -26,12 +26,12 @@ subscription Message {
   }
 }
 
-mutation SendMessage($content: String!) {
-  sendMessage(input: { content: $content })
-}
+# mutation SendMessage($content: String!) {
+#   sendMessage(input: { content: $content })
+# }
 
-mutation SendChannelMessage($content: String!, $channelId: Int!) {
-  sendChannelMessage(input: { content: $content, channelId: $channelId })
+mutation SendMessage($content: String!, $channelId: Int) {
+  sendMessage(input: { content: $content, channelId: $channelId })
 }
 
 mutation DeleteMessage($id: Int!) {

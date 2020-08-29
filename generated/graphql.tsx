@@ -83,7 +83,6 @@ export type Mutation = {
   login: LoginResponse;
   logout: Scalars['Boolean'];
   sendMessage: Scalars['Boolean'];
-  sendChannelMessage: Scalars['Boolean'];
   deleteMessage: Scalars['Boolean'];
   createChannel: Scalars['Boolean'];
 };
@@ -110,11 +109,6 @@ export type MutationSendMessageArgs = {
 };
 
 
-export type MutationSendChannelMessageArgs = {
-  input: ChannelMessageInput;
-};
-
-
 export type MutationDeleteMessageArgs = {
   id: Scalars['Int'];
 };
@@ -138,11 +132,7 @@ export type LoginResponse = {
 
 export type MessageInput = {
   content: Scalars['String'];
-};
-
-export type ChannelMessageInput = {
-  content: Scalars['String'];
-  channelId: Scalars['Int'];
+  channelId?: Maybe<Scalars['Int']>;
 };
 
 export type Subscription = {
@@ -262,23 +252,13 @@ export type MessageSubscription = (
 
 export type SendMessageMutationVariables = Exact<{
   content: Scalars['String'];
+  channelId?: Maybe<Scalars['Int']>;
 }>;
 
 
 export type SendMessageMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'sendMessage'>
-);
-
-export type SendChannelMessageMutationVariables = Exact<{
-  content: Scalars['String'];
-  channelId: Scalars['Int'];
-}>;
-
-
-export type SendChannelMessageMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Mutation, 'sendChannelMessage'>
 );
 
 export type DeleteMessageMutationVariables = Exact<{
@@ -598,8 +578,8 @@ export function useMessageSubscription(baseOptions?: ApolloReactHooks.Subscripti
 export type MessageSubscriptionHookResult = ReturnType<typeof useMessageSubscription>;
 export type MessageSubscriptionResult = ApolloReactCommon.SubscriptionResult<MessageSubscription>;
 export const SendMessageDocument = gql`
-    mutation SendMessage($content: String!) {
-  sendMessage(input: {content: $content})
+    mutation SendMessage($content: String!, $channelId: Int) {
+  sendMessage(input: {content: $content, channelId: $channelId})
 }
     `;
 export type SendMessageMutationFn = ApolloReactCommon.MutationFunction<SendMessageMutation, SendMessageMutationVariables>;
@@ -618,6 +598,7 @@ export type SendMessageMutationFn = ApolloReactCommon.MutationFunction<SendMessa
  * const [sendMessageMutation, { data, loading, error }] = useSendMessageMutation({
  *   variables: {
  *      content: // value for 'content'
+ *      channelId: // value for 'channelId'
  *   },
  * });
  */
@@ -627,37 +608,6 @@ export function useSendMessageMutation(baseOptions?: ApolloReactHooks.MutationHo
 export type SendMessageMutationHookResult = ReturnType<typeof useSendMessageMutation>;
 export type SendMessageMutationResult = ApolloReactCommon.MutationResult<SendMessageMutation>;
 export type SendMessageMutationOptions = ApolloReactCommon.BaseMutationOptions<SendMessageMutation, SendMessageMutationVariables>;
-export const SendChannelMessageDocument = gql`
-    mutation SendChannelMessage($content: String!, $channelId: Int!) {
-  sendChannelMessage(input: {content: $content, channelId: $channelId})
-}
-    `;
-export type SendChannelMessageMutationFn = ApolloReactCommon.MutationFunction<SendChannelMessageMutation, SendChannelMessageMutationVariables>;
-
-/**
- * __useSendChannelMessageMutation__
- *
- * To run a mutation, you first call `useSendChannelMessageMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useSendChannelMessageMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [sendChannelMessageMutation, { data, loading, error }] = useSendChannelMessageMutation({
- *   variables: {
- *      content: // value for 'content'
- *      channelId: // value for 'channelId'
- *   },
- * });
- */
-export function useSendChannelMessageMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<SendChannelMessageMutation, SendChannelMessageMutationVariables>) {
-        return ApolloReactHooks.useMutation<SendChannelMessageMutation, SendChannelMessageMutationVariables>(SendChannelMessageDocument, baseOptions);
-      }
-export type SendChannelMessageMutationHookResult = ReturnType<typeof useSendChannelMessageMutation>;
-export type SendChannelMessageMutationResult = ApolloReactCommon.MutationResult<SendChannelMessageMutation>;
-export type SendChannelMessageMutationOptions = ApolloReactCommon.BaseMutationOptions<SendChannelMessageMutation, SendChannelMessageMutationVariables>;
 export const DeleteMessageDocument = gql`
     mutation DeleteMessage($id: Int!) {
   deleteMessage(id: $id)

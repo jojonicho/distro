@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import styled from '@emotion/styled'
 import Link from 'next/link'
+import { Text } from '@chakra-ui/core'
 
 interface ChannelProps {
   id: number
@@ -76,7 +77,7 @@ export const Channel: React.FC<ChannelProps> = ({ id, image, name }) => {
           <Content>
             <Img src={image} />
             <Detail open={open}>
-              <h1>{name}</h1>
+              <Text fontSize="1rem">{name}</Text>
             </Detail>
           </Content>
         </a>

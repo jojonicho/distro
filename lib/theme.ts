@@ -86,12 +86,7 @@ export const theme = {
   colors,
   gradient,
   shadow,
-  breakpoints: {
-    xs: '400px',
-    s: '600px',
-    m: '900px',
-    l: '1200px',
-  },
+  breakpoints: ['30em', '48em', '62em', '80em'],
   fontFamily: {
     // eslint-disable-next-line
     body: `Overpass,-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'`,

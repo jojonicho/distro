@@ -1,11 +1,9 @@
-import App from 'next/app'
-import NProgress from 'nprogress'
 import { ApolloProvider } from '@apollo/react-hooks'
-import Router from 'next/router'
 import withApolloClient from '../lib/with-apollo-client'
 
 import React, { useState, useEffect } from 'react'
 import { ThemeProvider, css, Global } from '@emotion/react'
+import { ThemeProvider as ChakraTheme, CSSReset } from '@chakra-ui/core'
 import { setAccessToken } from '../lib/accessToken'
 import { HashLoader as Loader } from 'react-spinners'
 import theme from '../lib/theme'
@@ -105,15 +103,18 @@ const MyApp = ({ Component, pageProps, apolloClient }) => {
             }
           `}
         />
-        {loading ? (
-          <Container>
-            <Loader />
-          </Container>
-        ) : (
-          <Container>
-            <Component {...pageProps} />
-          </Container>
-        )}
+        <ChakraTheme>
+          <CSSReset />
+          {loading ? (
+            <Container>
+              <Loader />
+            </Container>
+          ) : (
+            <Container>
+              <Component {...pageProps} />
+            </Container>
+          )}
+        </ChakraTheme>
       </ThemeProvider>
     </ApolloProvider>
   )
