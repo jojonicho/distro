@@ -37,7 +37,7 @@ const FormContainer = styled.div`
       filter: brightness(1.2);
     }
   }
-  @media (max-width: ${(props) => props.theme.breakpoints.xs}) {
+  @media (max-width: ${(props) => props.theme.breakpoints[0]}) {
     width: 80vw;
   }
 `
@@ -66,7 +66,7 @@ const Input = styled.input`
   &:focus {
     border: none;
   }
-  @media (max-width: ${(props) => props.theme.breakpoints.xs}) {
+  @media (max-width: ${(props) => props.theme.breakpoints[0]}) {
     width: 100%;
   }
 `
