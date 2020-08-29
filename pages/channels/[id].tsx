@@ -13,7 +13,7 @@ import { useForm } from 'react-hook-form'
 import { Message } from '../../components/MessageList/Message'
 import ChannelList from '../../components/ChannelList'
 import { BarLoader } from 'react-spinners'
-import { Navbar } from '../../components/Navbar'
+import { Navbar } from '../../components/Navbar/Navbar'
 import Login from '../login'
 
 const InputContainer = styled.div`
@@ -203,9 +203,7 @@ const Home = () => {
                   type="search"
                   name="content"
                   placeholder={
-                    errors.content
-                      ? errors.content.message
-                      : 'Message global chat'
+                    errors.content ? errors.content.message : 'Message channel'
                   }
                   ref={register({
                     required: 'Required',

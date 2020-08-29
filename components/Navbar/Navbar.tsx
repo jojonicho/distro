@@ -1,11 +1,12 @@
 import React from 'react'
-import { useLogoutMutation, useMeQuery, MeQuery } from '../generated/graphql'
+import { useLogoutMutation, useMeQuery, MeQuery } from '../../generated/graphql'
 import styled from '@emotion/styled'
-import { setAccessToken, getAccessToken } from '../lib/accessToken'
+import { setAccessToken, getAccessToken } from '../../lib/accessToken'
 import Link from 'next/link'
-import theme from '../lib/theme'
+import theme from '../../lib/theme'
 import { useRouter } from 'next/router'
 import { BarLoader } from 'react-spinners'
+import { Text } from '@chakra-ui/core'
 
 const Nav = styled.nav`
   // padding: 1vw 2vw 0 2vw;
@@ -88,7 +89,9 @@ export const Navbar: React.FC<NavbarProps> = ({ data, loading }) => {
               </a>
             </Link>
             <Detail>
-              <p>{data.me.username}</p>
+              <Text fontWeight="bold" fontFamily="arial">
+                {data.me.username}
+              </Text>
             </Detail>
           </Message>
           <Button

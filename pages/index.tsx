@@ -13,7 +13,7 @@ import { useForm } from 'react-hook-form'
 import { Message } from '../components/MessageList/Message'
 import ChannelList from '../components/ChannelList'
 import Login from './login'
-import { Navbar } from '../components/Navbar'
+import { Navbar } from '../components/Navbar/Navbar'
 import { BarLoader } from 'react-spinners'
 
 const InputContainer = styled.div`

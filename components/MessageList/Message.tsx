@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import styled from '@emotion/styled'
 import { useDeleteMessageMutation, User } from '../../generated/graphql'
+import { Text } from '@chakra-ui/core'
 
 interface MessageProps {
   id: number
@@ -102,7 +103,9 @@ export const Message: React.FC<MessageProps> = ({
       <Content>
         <Img src={image} />
         <Detail>
-          <h1>{username}</h1>
+          <Text fontFamily="arial" fontWeight="bold">
+            {username}
+          </Text>
           <p>{message}</p>
         </Detail>
       </Content>
