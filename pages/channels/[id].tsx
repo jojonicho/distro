@@ -15,6 +15,7 @@ import ChannelList from '../../components/ChannelList'
 import { BarLoader } from 'react-spinners'
 import { Navbar } from '../../components/Navbar/Navbar'
 import Login from '../login'
+import { withApollo } from '../../utils/withApollo'
 
 const InputContainer = styled.div`
   padding: calc(0.3vw + 0.3rem);
@@ -95,9 +96,9 @@ const Home = () => {
     },
   })
   const { data: chat } = useMessageSubscription({
-    onSubscriptionData: ({ subscriptionData }) => {
-      message.messages.messages.unshift(subscriptionData.data.newMessage)
-    },
+    // onSubscriptionData: ({ subscriptionData }) => {
+    //   message.messages.messages.unshift(subscriptionData.data.newMessage)
+    // },
   })
   const { register, handleSubmit, reset, errors } = useForm<FormData>({
     mode: 'onSubmit',
@@ -221,4 +222,4 @@ const Home = () => {
   )
 }
 
-export default Home
+export default withApollo({ ssr: false })(Home)

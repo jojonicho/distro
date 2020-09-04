@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import styled from '@emotion/styled'
 import Link from 'next/link'
 import { Text } from '@chakra-ui/core'
-import { colors } from '../../lib/theme'
+import { colors } from '../../utils/theme'
 
 interface ChannelProps {
   id: number

@@ -21,7 +21,7 @@ import {
   Button as ChakraButton,
   FormControl,
 } from '@chakra-ui/core'
-import { colors } from '../../lib/theme'
+import { colors } from '../../utils/theme'
 import { useForm } from 'react-hook-form'
 
 interface ChannelListProps {
@@ -67,6 +67,9 @@ const ChannelList: React.FC<ChannelListProps> = ({ loading, channels }) => {
       await chn({
         variables: {
           name,
+        },
+        update: (cache) => {
+          cache.evict({ fieldName: 'channels' })
         },
       })
     }

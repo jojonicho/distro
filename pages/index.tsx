@@ -8,6 +8,7 @@ import {
   useMeQuery,
   MessageSubscription as MessageSubscriptionType,
   MessagesQuery,
+  MessagesDocument,
 } from '../generated/graphql'
 import { useForm } from 'react-hook-form'
 import { Message } from '../components/MessageList/Message'
@@ -15,6 +16,7 @@ import ChannelList from '../components/ChannelList'
 import Login from './login'
 import { Navbar } from '../components/Navbar/Navbar'
 import { BarLoader } from 'react-spinners'
+import { withApollo } from '../utils/withApollo'
 
 const InputContainer = styled.div`
   padding: calc(0.3vw + 0.3rem);
@@ -87,8 +89,14 @@ const Index = () => {
     },
   })
   const { data: chat } = useMessageSubscription({
-    onSubscriptionData: ({ subscriptionData }) => {
-      message.messages.messages.unshift(subscriptionData.data.newMessage)
+    onSubscriptionData: ({ client, subscriptionData }) => {
+      // message.messages.messages.unshift(subscriptionData.data.newMessage)
+      client.writeQuery({
+        query: MessagesDocument,
+        data: {
+          messages: [...message.messages.messages, subscriptionData],
+        },
+      })
     },
   })
   const { register, handleSubmit, reset, errors } = useForm<FormData>({
@@ -160,7 +168,6 @@ const Index = () => {
                                 message.messages.messages.length - 1
                               ].date,
                           },
-                          // doesnt work
                           updateQuery: (
                             prev,
                             { fetchMoreResult }
@@ -217,4 +224,4 @@ const Index = () => {
     </>
   )
 }
-export default Index
+export default withApollo({ ssr: true })(Index)

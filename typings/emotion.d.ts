@@ -1,6 +1,6 @@
 import '@emotion/react'
 
-import theme from '../lib/theme'
+import theme from '../utils/theme'
 
 export type ThemeType = typeof theme
 

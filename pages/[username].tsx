@@ -1,7 +1,7 @@
 import React from 'react'
 import { useMeQuery } from '../generated/graphql'
 import styled from '@emotion/styled'
-import theme from '../lib/theme'
+import theme from '../utils/theme'
 
 interface MeProps {}
 

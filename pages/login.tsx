@@ -6,12 +6,13 @@ import {
   MeDocument,
   MeQuery,
 } from '../generated/graphql'
-import { setAccessToken } from '../lib/accessToken'
+import { setAccessToken } from '../utils/accessToken'
 import { useRouter } from 'next/router'
 import styled from '@emotion/styled'
 import { Subtitle } from '../components/Subtitle'
 import Link from 'next/link'
 import { ClipLoader as Loader } from 'react-spinners'
+import { withApollo } from '../utils/withApollo'
 
 const LoginContainer = styled.div`
   display: flex;
@@ -158,4 +159,4 @@ const Login = () => {
   )
 }
 
-export default Login
+export default withApollo({ ssr: false })(Login)

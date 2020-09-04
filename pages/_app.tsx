@@ -1,5 +1,5 @@
 import { ApolloProvider } from '@apollo/react-hooks'
-import withApolloClient from '../lib/with-apollo-client'
+import { withApollo } from '../utils/withApollo'
 
 import React, { useState, useEffect } from 'react'
 import { ThemeProvider, css, Global } from '@emotion/react'
@@ -8,9 +8,9 @@ import {
   CSSReset,
   ColorModeProvider,
 } from '@chakra-ui/core'
-import { setAccessToken } from '../lib/accessToken'
+import { setAccessToken } from '../utils/accessToken'
 import { HashLoader as Loader } from 'react-spinners'
-import theme from '../lib/theme'
+import theme from '../utils/theme'
 import styled from '@emotion/styled'
 
 const Container = styled.div`
@@ -25,7 +25,7 @@ const URL = production
   ? 'https://distrobackend.herokuapp.com'
   : 'http://localhost:4000'
 
-const MyApp = ({ Component, pageProps, apolloClient }) => {
+const MyApp = ({ Component, pageProps }) => {
   const [loading, setLoading] = useState(true)
   useEffect(() => {
     fetch(`${URL}/refresh_token`, {
@@ -38,92 +38,93 @@ const MyApp = ({ Component, pageProps, apolloClient }) => {
     })
   }, [])
   return (
-    <ApolloProvider client={apolloClient}>
-      <ThemeProvider theme={theme}>
-        <Global
-          styles={css`
-            *,
-            *:before,
-            *:after {
-              box-sizing: border-box;
-              margin: 0;
-              padding: 0;
-            }
-            html {
-              text-rendering: optimizeLegibility;
-              overflow-x: hidden;
-              -ms-overflow-style: scrollbar;
-              -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-              -webkit-font-smoothing: antialiased;
-              -moz-osx-font-smoothing: grayscale;
-            }
-            body {
-              width: 100vw;
-              min-height: 100vh;
-              display: flex;
-              overflow-y: hidden;
-              flex-direction: column;
-              background-image: linear-gradient(
-                to right top,
-                #d16ba5,
-                #c777b9,
-                #ba83ca,
-                #aa8fd8,
-                #9a9ae1,
-                #8aa7ec,
-                #79b3f4,
-                #69bff8,
-                #52cffe,
-                #41dfff,
-                #46eefa,
-                #5ffbf1
-              );
-              font-family: ${theme.fontFamily.body};
-            }
-            a {
-              color: ${theme.colors.primary.dark};
-              transition: color 0.5s;
-              text-decoration: none;
-              cursor: pointer;
-            }
-            a:hover {
-              text-decoration: none;
-              color: ${theme.colors.secondary.base};
-              cursor: pointer;
-            }
-            h1 {
-              font-family: ${theme.fontFamily.heading};
-            }
-            input {
-              border: none;
-            }
-            button {
-              cursor: pointer;
-            }
-            textarea:focus,
-            button:focus,
-            input:focus {
-              outline: none;
-            }
-          `}
-        />
-        <ChakraTheme>
-          <ColorModeProvider>
-            <CSSReset />
-            {loading ? (
-              <Container>
-                <Loader />
-              </Container>
-            ) : (
-              <Container>
-                <Component {...pageProps} />
-              </Container>
-            )}
-          </ColorModeProvider>
-        </ChakraTheme>
-      </ThemeProvider>
-    </ApolloProvider>
+    // <ApolloProvider client={apolloClient}>
+    <ThemeProvider theme={theme}>
+      <Global
+        styles={css`
+          *,
+          *:before,
+          *:after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+          }
+          html {
+            text-rendering: optimizeLegibility;
+            overflow-x: hidden;
+            -ms-overflow-style: scrollbar;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+          }
+          body {
+            width: 100vw;
+            min-height: 100vh;
+            display: flex;
+            overflow-y: hidden;
+            flex-direction: column;
+            background-image: linear-gradient(
+              to right top,
+              #d16ba5,
+              #c777b9,
+              #ba83ca,
+              #aa8fd8,
+              #9a9ae1,
+              #8aa7ec,
+              #79b3f4,
+              #69bff8,
+              #52cffe,
+              #41dfff,
+              #46eefa,
+              #5ffbf1
+            );
+            font-family: ${theme.fontFamily.body};
+          }
+          a {
+            color: ${theme.colors.primary.dark};
+            transition: color 0.5s;
+            text-decoration: none;
+            cursor: pointer;
+          }
+          a:hover {
+            text-decoration: none;
+            color: ${theme.colors.secondary.base};
+            cursor: pointer;
+          }
+          h1 {
+            font-family: ${theme.fontFamily.heading};
+          }
+          input {
+            border: none;
+          }
+          button {
+            cursor: pointer;
+          }
+          textarea:focus,
+          button:focus,
+          input:focus {
+            outline: none;
+          }
+        `}
+      />
+      <ChakraTheme>
+        <ColorModeProvider>
+          <CSSReset />
+          {loading ? (
+            <Container>
+              <Loader />
+            </Container>
+          ) : (
+            <Container>
+              <Component {...pageProps} />
+            </Container>
+          )}
+        </ColorModeProvider>
+      </ChakraTheme>
+    </ThemeProvider>
+    // </ApolloProvider>
   )
 }
 
-export default withApolloClient(MyApp)
+// export default withApolloClient(MyApp)
+export default withApollo({ ssr: false })(MyApp)

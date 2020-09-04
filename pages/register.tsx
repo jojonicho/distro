@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 import styled from '@emotion/styled'
 import { Subtitle } from '../components/Subtitle'
 import Link from 'next/link'
+import { withApollo } from '../utils/withApollo'
 
 type FormData = {
   username: string
@@ -150,4 +151,4 @@ const Register = () => {
     </RegisterContainer>
   )
 }
-export default Register
+export default withApollo({ ssr: false })(Register)
