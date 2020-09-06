@@ -10,6 +10,7 @@ import {
   Text,
   Stack,
   Link as ChakraLink,
+  Tooltip,
 } from '@chakra-ui/core'
 
 interface SettingsProps {
@@ -31,22 +32,19 @@ export const SettingsPopover: React.FC<SettingsProps> = ({
   logout,
   router,
 }) => (
-  <PopoverContent border="0" width="100px">
-    <Stack p={2} spacing={0}>
-      <Text fontWeight="bold">
-        <ChakraLink href={`/users/${id}`}>
-          <Badge fontSize="sm">{username}</Badge>
-        </ChakraLink>
-      </Text>
-      <Flex align="center" mt={2}>
-        <Avatar
-          name="profPic"
-          src={currentImage}
-          cursor="pointer"
-          onClick={onOpen}
-        />
-      </Flex>
+  <PopoverContent border="0">
+    <Stack p={2} spacing={0} color="gray.800">
+      {/* <ChakraLink href={`/users/${id}`}> */}
+      <ChakraLink href={`/me`}>
+        <Badge mb={2} fontSize="sm">
+          {username}
+        </Badge>
+      </ChakraLink>
+      <Button variantColor="teal" onClick={onOpen}>
+        Change Image
+      </Button>
       <Button
+        variantColor="pink"
         mt={2}
         onClick={async () => {
           await logout()

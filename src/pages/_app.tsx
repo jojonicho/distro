@@ -12,6 +12,7 @@ import { setAccessToken } from '../utils/accessToken'
 import { HashLoader as Loader } from 'react-spinners'
 import theme from '../utils/theme'
 import styled from '@emotion/styled'
+import chakraTheme from '../utils/chakraTheme'
 
 const Container = styled.div`
   display: flex;
@@ -107,7 +108,7 @@ const MyApp = ({ Component, pageProps }) => {
           }
         `}
       />
-      <ChakraTheme>
+      <ChakraTheme theme={chakraTheme}>
         <ColorModeProvider>
           <CSSReset />
           {loading ? (

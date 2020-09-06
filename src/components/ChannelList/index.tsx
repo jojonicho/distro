@@ -31,7 +31,6 @@ const ChannelContainer = styled.div`
   display: flex;
   flex-direction: column;
   margin-right: 0.1rem;
-  background: ${({ theme }) => theme.gradient.rightToLeft};
 `
 const AddChannelContainer = styled.div`
   padding: calc(0.3vw + 0.4rem) 1vw;
@@ -39,17 +38,10 @@ const AddChannelContainer = styled.div`
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  border-radius: ${({ theme }) => theme.borderRadius.default};
-  transition: ${({ theme }) => theme.transitions.boom.transition};
 `
 const Button = styled.button`
-  border-radius: ${({ theme }) => theme.borderRadius.round};
-  background: ${({ theme }) => theme.gradient.rightToLeft};
-  color: ${({ theme }) => theme.colors.white.base};
-  transition: ${({ theme }) => theme.transitions.boom.transition};
   font-size: calc(0.5vw + 1rem);
   &:hover {
-    background: ${({ theme }) => theme.colors.black.light};
   }
   border: none;
   width: calc(1vw + 1.75rem);
@@ -74,7 +66,8 @@ const ChannelList: React.FC<ChannelListProps> = () => {
     }
   }
   return (
-    <ChannelContainer>
+    // <Stack bg="gray.800">
+    <Stack>
       {loading ? (
         <BarLoader />
       ) : (
@@ -105,9 +98,7 @@ const ChannelList: React.FC<ChannelListProps> = () => {
                   <form onSubmit={handleSubmit(onSubmit)}>
                     <FormControl>
                       <Stack spacing={3} align="center" justify="center">
-                        <FormLabel>
-                          <Badge>Channel Name</Badge>
-                        </FormLabel>
+                        <FormLabel>Create A Channel</FormLabel>
                         <Input
                           p={3}
                           variant="outline"
@@ -117,8 +108,8 @@ const ChannelList: React.FC<ChannelListProps> = () => {
                           color={colors.black.base}
                         />
                         <ChakraButton
-                          mt={4}
                           p={3}
+                          w="100%"
                           borderRadius={3}
                           background={colors.secondary.base}
                           isLoading={formState.isSubmitting}
@@ -136,7 +127,7 @@ const ChannelList: React.FC<ChannelListProps> = () => {
           </AddChannelContainer>
         </>
       )}
-    </ChannelContainer>
+    </Stack>
   )
 }
 

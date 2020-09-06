@@ -17,56 +17,10 @@ import Login from './login'
 import { Navbar } from '../components/Navbar/Navbar'
 import { BarLoader } from 'react-spinners'
 import { withApollo } from '../utils/withApollo'
+import { Stack, Input, Button } from '@chakra-ui/core'
 
-const InputContainer = styled.div`
-  padding: calc(0.3vw + 0.3rem);
-`
-
-const Input = styled.input`
-  padding: calc(0.3vw + 0.3rem);
-  width: 100%;
-  border-radius: ${({ theme }) => theme.borderRadius.default};
-  background: ${({ theme }) => theme.colors.black.light};
-  color: ${({ theme }) => theme.colors.white.base};
-  &:focus {
-    border: none;
-  }
-  position: relative;
-  bottom: 1px;
-`
-const Chat = styled.div`
-  overflow-y: scroll;
-  display: flex;
-  flex-direction: column-reverse;
-`
-const IndexContainer = styled.div`
-  height: 100vh;
-  // width: calc(99vw + 0.5rem);
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  color: ${({ theme }) => theme.colors.white.base};
-  background: ${({ theme }) => theme.gradient.rightToLeft};
-`
 const MemberContainer = styled.div`
   display: flex;
-`
-const ChatContainer = styled.div`
-  // min-width: 300px;
-  width: 90vw;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  h1 {
-    font-size: calc(0.9rem + 0.1vw);
-  }
-  p {
-    maring: auto;
-    font-size: calc(0.9rem + 0.1vw);
-  }
-  color: ${({ theme }) => theme.colors.white.base};
-  background: ${({ theme }) => theme.gradient.rightToLeft};
-  border-radius: ${({ theme }) => theme.borderRadius.default};
 `
 
 type FormData = {
@@ -122,15 +76,19 @@ const Index = () => {
       {userLoading ? (
         <BarLoader />
       ) : user && user.me ? (
-        <IndexContainer>
+        <Stack isInline overflowY="scroll" height="100vh" width="100vw">
           <Navbar data={user} loading={userLoading} />
           <ChannelList />
-          <ChatContainer>
-            <Chat>
+          <Stack bg="gray.700" color="purple.50" w="100%" justify="flex-end">
+            <Stack
+              overflowY="scroll"
+              flexDirection="column-reverse"
+              justify="flex-start"
+            >
               {messageLoading ? (
                 <BarLoader />
               ) : (
-                <Chat>
+                <Stack flexDirection="column-reverse">
                   {chat &&
                   chat.newMessage &&
                   (message.messages.messages.length == 0 ||
@@ -156,8 +114,9 @@ const Index = () => {
                         user={user.me}
                       />
                     ))}
-                  {message && message.messages.hasMore && (
-                    <button
+                  {message && message.messages && message.messages.hasMore && (
+                    <Button
+                      bg="gray.600"
                       onClick={() => {
                         fetchMore({
                           variables: {
@@ -192,31 +151,29 @@ const Index = () => {
                       }}
                     >
                       load more
-                    </button>
+                    </Button>
                   )}
-                </Chat>
+                </Stack>
               )}
-            </Chat>
-            <InputContainer>
-              <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
-                <Input
-                  autoComplete="off"
-                  type="search"
-                  name="content"
-                  placeholder={
-                    errors.content
-                      ? errors.content.message
-                      : 'Message global chat'
-                  }
-                  ref={register({
-                    required: 'Required',
-                  })}
-                />
-              </form>
-            </InputContainer>
-          </ChatContainer>
+            </Stack>
+            <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
+              <Input
+                autoComplete="off"
+                bg="gray.600"
+                name="content"
+                placeholder={
+                  errors.content
+                    ? errors.content.message
+                    : 'Message global chat'
+                }
+                ref={register({
+                  required: 'Required',
+                })}
+              />
+            </form>
+          </Stack>
           <MemberContainer></MemberContainer>
-        </IndexContainer>
+        </Stack>
       ) : (
         <Login />
       )}

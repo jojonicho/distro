@@ -1,84 +1,38 @@
 import React from 'react'
-import { useRouter } from 'next/router'
 import styled from '@emotion/styled'
+
+import { useForm } from 'react-hook-form'
+import { BarLoader } from 'react-spinners'
+import { Stack, Input, Button } from '@chakra-ui/core'
+import { useRouter } from 'next/router'
 import {
-  useMessageSubscription,
-  useSendMessageMutation,
-  useMessagesQuery,
-  useChannelsQuery,
   useMeQuery,
+  useMessagesQuery,
+  useMessageSubscription,
+  MessagesDocument,
+  useSendMessageMutation,
   MessagesQuery,
 } from '../../generated/graphql'
-import { useForm } from 'react-hook-form'
-import { Message } from '../../components/MessageList/Message'
-import ChannelList from '../../components/ChannelList'
-import { BarLoader } from 'react-spinners'
 import { Navbar } from '../../components/Navbar/Navbar'
-import Login from '../login'
+import ChannelList from '../../components/ChannelList'
+import { Message } from '../../components/MessageList/Message'
 import { withApollo } from '../../utils/withApollo'
+import Login from '../login'
 
-const InputContainer = styled.div`
-  padding: calc(0.3vw + 0.3rem);
-`
-
-const Input = styled.input`
-  padding: calc(0.3vw + 0.3rem);
-  width: 100%;
-  border-radius: ${({ theme }) => theme.borderRadius.default};
-  background: ${({ theme }) => theme.colors.black.light};
-  color: ${({ theme }) => theme.colors.white.base};
-  &:focus {
-    border: none;
-  }
-  position: relative;
-  bottom: 1px;
-`
 const Chat = styled.div`
   overflow-y: scroll;
   display: flex;
   flex-direction: column-reverse;
 `
-const IndexContainer = styled.div`
-  height: 100vh;
-  // width: 99vw;
-  // margin: 1vw;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  color: ${({ theme }) => theme.colors.white.base};
-  background: ${({ theme }) => theme.gradient.rightToLeft};
-  // border-radius: ${({ theme }) => theme.borderRadius.default};
-`
 const MemberContainer = styled.div`
   display: flex;
 `
-const ChatContainer = styled.div`
-  // min-width: 300px;
-  width: 90vw;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  h1 {
-    font-size: calc(0.9rem + 0.1vw);
-  }
-  p {
-    maring: auto;
-    font-size: calc(0.9rem + 0.1vw);
-  }
-  color: ${({ theme }) => theme.colors.white.base};
-  background: ${({ theme }) => theme.gradient.rightToLeft};
-  border-radius: ${({ theme }) => theme.borderRadius.default};
-`
-const ChannelContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  overflow-y: scroll;
-`
+
 type FormData = {
   content: string
 }
 
-const Home = () => {
+const Index = () => {
   const { data: user, loading: userLoading } = useMeQuery()
   const router = useRouter()
   const { id } = router.query
@@ -96,9 +50,15 @@ const Home = () => {
     },
   })
   const { data: chat } = useMessageSubscription({
-    // onSubscriptionData: ({ subscriptionData }) => {
-    //   message.messages.messages.unshift(subscriptionData.data.newMessage)
-    // },
+    onSubscriptionData: ({ client, subscriptionData }) => {
+      // message.messages.messages.unshift(subscriptionData.data.newMessage)
+      client.writeQuery({
+        query: MessagesDocument,
+        data: {
+          messages: [...message.messages.messages, subscriptionData],
+        },
+      })
+    },
   })
   const { register, handleSubmit, reset, errors } = useForm<FormData>({
     mode: 'onSubmit',
@@ -117,21 +77,20 @@ const Home = () => {
       },
     })
   }
-
   return (
     <>
       {userLoading ? (
         <BarLoader />
       ) : user && user.me ? (
-        <IndexContainer>
+        <Stack isInline overflowY="scroll" height="100vh" width="100vw">
           <Navbar data={user} loading={userLoading} />
           <ChannelList />
-          <ChatContainer>
-            <Chat>
+          <Stack bg="gray.700" color="purple.50" w="100%" justify="flex-end">
+            <Stack overflowY="scroll" flexDirection="column-reverse">
               {messageLoading ? (
                 <BarLoader />
               ) : (
-                <Chat>
+                <Stack flexDirection="column-reverse">
                   {chat &&
                   chat.newMessage &&
                   (message.messages.messages.length == 0 ||
@@ -145,6 +104,8 @@ const Home = () => {
                     />
                   ) : null}
                   {message &&
+                    message.messages &&
+                    message.messages &&
                     message.messages.messages.map((msg) => (
                       <Message
                         key={msg.id}
@@ -155,8 +116,9 @@ const Home = () => {
                         user={user.me}
                       />
                     ))}
-                  {message && message.messages.hasMore && (
-                    <button
+                  {message && message.messages && message.messages.hasMore && (
+                    <Button
+                      bg="gray.600"
                       onClick={() => {
                         fetchMore({
                           variables: {
@@ -166,7 +128,6 @@ const Home = () => {
                                 message.messages.messages.length - 1
                               ].date,
                           },
-                          // doesnt work
                           updateQuery: (
                             prev,
                             { fetchMoreResult }
@@ -192,34 +153,33 @@ const Home = () => {
                       }}
                     >
                       load more
-                    </button>
+                    </Button>
                   )}
-                </Chat>
+                </Stack>
               )}
-            </Chat>
-            <InputContainer>
-              <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
-                <Input
-                  autoComplete="off"
-                  type="search"
-                  name="content"
-                  placeholder={
-                    errors.content ? errors.content.message : 'Message channel'
-                  }
-                  ref={register({
-                    required: 'Required',
-                  })}
-                />
-              </form>
-            </InputContainer>
-          </ChatContainer>
+            </Stack>
+            <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
+              <Input
+                autoComplete="off"
+                bg="gray.600"
+                name="content"
+                placeholder={
+                  errors.content
+                    ? errors.content.message
+                    : 'Message global chat'
+                }
+                ref={register({
+                  required: 'Required',
+                })}
+              />
+            </form>
+          </Stack>
           <MemberContainer></MemberContainer>
-        </IndexContainer>
+        </Stack>
       ) : (
         <Login />
       )}
     </>
   )
 }
-
-export default withApollo({ ssr: false })(Home)
+export default withApollo({ ssr: true })(Index)

@@ -20,14 +20,11 @@ const RegisterContainer = styled.div`
   align-items: center;
 `
 const FormContainer = styled.div`
-  background: ${({ theme }) => theme.gradient.rightToLeft};
   // backdrop-filter: blur(15px);
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: ${({ theme }) => theme.borderRadius.default};
   padding: calc(0.05vw + 2.5rem);
-  color: ${({ theme }) => theme.colors.secondary.base};
   font-weight: bold;
   .submit {
     cursor: pointer;
@@ -36,9 +33,6 @@ const FormContainer = styled.div`
     &:hover {
       filter: brightness(1.2);
     }
-  }
-  @media (max-width: ${(props) => props.theme.breakpoints[0]}) {
-    width: 80vw;
   }
 `
 
@@ -63,14 +57,8 @@ const Input = styled.input`
   display: flex;
   justify-content: center;
   width: 20rem;
-  border-radius: ${({ theme }) => theme.borderRadius.default};
-  background: ${({ theme }) => theme.colors.black.light};
-  color: ${({ theme }) => theme.colors.white.base};
   &:focus {
     border: none;
-  }
-  @media (max-width: ${(props) => props.theme.breakpoints[0]}) {
-    width: 100%;
   }
 `
 const Register = () => {
