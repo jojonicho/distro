@@ -3,9 +3,18 @@ import { useForm } from 'react-hook-form'
 import { useRegisterMutation } from '../generated/graphql'
 import { useRouter } from 'next/router'
 import styled from '@emotion/styled'
-import { Subtitle } from '../components/Subtitle'
 import Link from 'next/link'
 import { withApollo } from '../utils/withApollo'
+import {
+  Stack,
+  FormControl,
+  FormLabel,
+  FormErrorMessage,
+  Button,
+  Icon,
+  Link as ChakraLink,
+  Input,
+} from '@chakra-ui/core'
 
 type FormData = {
   username: string
@@ -19,51 +28,10 @@ const RegisterContainer = styled.div`
   justify-content: center;
   align-items: center;
 `
-const FormContainer = styled.div`
-  // backdrop-filter: blur(15px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: calc(0.05vw + 2.5rem);
-  font-weight: bold;
-  .submit {
-    cursor: pointer;
-    margin-bottom: 0;
-    font-weight: bold;
-    &:hover {
-      filter: brightness(1.2);
-    }
-  }
-`
 
-const Form = styled.form`
-  div {
-    margin-bottom: 1rem;
-    p {
-      // word-wrap: break-word;
-      // white-space: pre-wrap;
-      // overflow-x: hidden;
-      // word-break: break-all;
-      // overflow-wrap: break-word;
-      // display: inline-block;
-    }
-  }
-`
-
-const Input = styled.input`
-  // margin: 0.4rem 0 0.8rem 0;
-  margin: 0.4rem 0;
-  padding: calc(0.1vw + 0.5rem);
-  display: flex;
-  justify-content: center;
-  width: 20rem;
-  &:focus {
-    border: none;
-  }
-`
 const Register = () => {
   const router = useRouter()
-  const { register, handleSubmit, errors } = useForm<FormData>({
+  const { register, handleSubmit, errors, formState } = useForm<FormData>({
     mode: 'onBlur',
     reValidateMode: 'onChange',
     shouldFocusError: true,
@@ -82,27 +50,17 @@ const Register = () => {
     console.log(response)
   }
   return (
-    <RegisterContainer>
-      <FormContainer>
-        <Form onSubmit={handleSubmit(onSubmit)}>
-          <div>
-            <Subtitle text="username" />
+    <Stack bg="gray.700" p={10} borderRadius="5px" color="white">
+      <RegisterContainer>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <FormControl
+            isInvalid={Boolean(
+              errors.email?.message || errors.password?.message
+            )}
+          >
+            <FormLabel htmlFor="email">email</FormLabel>
             <Input
-              name="username"
-              placeholder="raphtalia"
-              ref={register({
-                required: 'username equired.',
-                pattern: {
-                  value: /^.{6,25}$/i,
-                  message: 'username must be between 6 and 25 characters',
-                },
-              })}
-            />
-            <p>{errors.username && errors.username.message}</p>
-          </div>
-          <div>
-            <Subtitle text="email" />
-            <Input
+              color="gray.700"
               name="email"
               placeholder="raphtalia@bestgirl.com"
               ref={register({
@@ -113,11 +71,30 @@ const Register = () => {
                 },
               })}
             />
-            {errors.email && errors.email.message}
-          </div>
-          <div>
-            <Subtitle text="password" />
+            <FormErrorMessage>
+              {errors.email && errors.email.message}
+            </FormErrorMessage>
+
+            <FormLabel htmlFor="username">username</FormLabel>
             <Input
+              color="gray.700"
+              name="username"
+              placeholder="raphtalia"
+              ref={register({
+                required: 'username equired.',
+                pattern: {
+                  value: /^.{6,25}$/i,
+                  message: 'username must be between 6 and 25 characters',
+                },
+              })}
+            />
+            <FormErrorMessage>
+              {errors.username && errors.username.message}
+            </FormErrorMessage>
+
+            <FormLabel htmlFor="password">password</FormLabel>
+            <Input
+              color="gray.700"
               type="password"
               placeholder="password"
               name="password"
@@ -130,13 +107,24 @@ const Register = () => {
                 },
               })}
             />
-            {errors.password && errors.password.message}
-          </div>
-          <Input className="submit" type="submit" />
-        </Form>
-      </FormContainer>
-      <Link href="/">already have an account?</Link>
-    </RegisterContainer>
+            <FormErrorMessage>
+              {errors.password && errors.password.message}
+            </FormErrorMessage>
+            <Button
+              mt={4}
+              variantColor="teal"
+              isLoading={formState.isSubmitting}
+              type="submit"
+            >
+              Submit
+            </Button>
+          </FormControl>
+        </form>
+      </RegisterContainer>
+      <ChakraLink href="/login">
+        already have an account? <Icon name="external-link" mx="2px" />
+      </ChakraLink>
+    </Stack>
   )
 }
 export default withApollo({ ssr: false })(Register)

@@ -9,17 +9,20 @@ import {
 import { setAccessToken } from '../utils/accessToken'
 import { useRouter } from 'next/router'
 import styled from '@emotion/styled'
-import { Subtitle } from '../components/Subtitle'
 import Link from 'next/link'
 import { ClipLoader as Loader } from 'react-spinners'
 import { withApollo } from '../utils/withApollo'
-
-const LoginContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`
+import {
+  Stack,
+  Input,
+  Text,
+  FormControl,
+  Button,
+  Link as ChakraLink,
+  FormLabel,
+  FormErrorMessage,
+  Icon,
+} from '@chakra-ui/core'
 
 const FormContainer = styled.div`
   display: flex;
@@ -27,38 +30,13 @@ const FormContainer = styled.div`
   align-items: center;
   padding: calc(0.05vw + 2.5rem);
   font-weight: bold;
-  .submit {
-    cursor: pointer;
-    margin-bottom: 0;
-    font-weight: bold;
-    &:hover {
-      filter: brightness(1.2);
-    }
-  }
 `
 
-const Form = styled.form`
-  div {
-    margin-bottom: 1rem;
-  }
-`
+const Form = styled.form``
 const LoaderContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-`
-
-const Input = styled.input`
-  // margin: 0.4rem 0 0.8rem 0;
-  margin: 0.4rem 0;
-  padding: calc(0.1vw + 0.5rem);
-  display: flex;
-  justify-content: center;
-  width: 20rem;
-  border-radius: 2px;
-  &:focus {
-    border: none;
-  }
 `
 
 type FormData = {
@@ -68,7 +46,7 @@ type FormData = {
 
 const Login = () => {
   const router = useRouter()
-  const { register, handleSubmit, errors } = useForm<FormData>({
+  const { register, handleSubmit, errors, formState } = useForm<FormData>({
     mode: 'onBlur',
     reValidateMode: 'onChange',
     shouldFocusError: true,
@@ -99,12 +77,17 @@ const Login = () => {
     router.push('/')
   }
   return (
-    <LoginContainer>
-      <FormContainer>
-        <Form onSubmit={handleSubmit(onSubmit)}>
-          <div>
-            <Subtitle text="email" />
+    <Stack p={10} bg="gray.700" color="white" borderRadius="5px">
+      <Stack align="center" justify="center">
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <FormControl
+            isInvalid={Boolean(
+              errors.email?.message || errors.password?.message
+            )}
+          >
+            <FormLabel htmlFor="email">email</FormLabel>
             <Input
+              color="gray.700"
               placeholder="iloveemilia@rem.com"
               name="email"
               ref={register({
@@ -115,11 +98,13 @@ const Login = () => {
                 },
               })}
             />
-            {errors.email && errors.email.message}
-          </div>
-          <div>
-            <Subtitle text="password" />
+
+            <FormErrorMessage>
+              {errors.email && errors.email.message}
+            </FormErrorMessage>
+            <FormLabel htmlFor="password">password</FormLabel>
             <Input
+              color="gray.700"
               type="password"
               placeholder="password"
               name="password"
@@ -132,19 +117,24 @@ const Login = () => {
                 },
               })}
             />
-            {errors.password && errors.password.message}
-          </div>
-          {loading ? (
-            <LoaderContainer>
-              <Loader color="white" />
-            </LoaderContainer>
-          ) : (
-            <Input className="submit" type="submit" />
-          )}
-        </Form>
-      </FormContainer>
-      <Link href="/register">or Register for an account</Link>
-    </LoginContainer>
+            <FormErrorMessage>
+              {errors.password && errors.password.message}
+            </FormErrorMessage>
+            <Button
+              mt={4}
+              variantColor="teal"
+              isLoading={formState.isSubmitting}
+              type="submit"
+            >
+              Submit
+            </Button>
+          </FormControl>
+        </form>
+      </Stack>
+      <ChakraLink href="/register" flexGrow={1} mr={2}>
+        or Register for an account <Icon name="external-link" mx="2px" />
+      </ChakraLink>
+    </Stack>
   )
 }
 

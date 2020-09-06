@@ -49,7 +49,7 @@ export const SettingsPopover: React.FC<SettingsProps> = ({
         onClick={async () => {
           await logout()
           await client!.resetStore()
-          router.push('/')
+          router.push('/login')
         }}
       >
         Logout
