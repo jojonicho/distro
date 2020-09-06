@@ -117,7 +117,6 @@ const Home = () => {
       },
     })
   }
-  const { data: channels, loading: channelsLoading } = useChannelsQuery()
 
   return (
     <>
@@ -126,7 +125,7 @@ const Home = () => {
       ) : user && user.me ? (
         <IndexContainer>
           <Navbar data={user} loading={userLoading} />
-          <ChannelList channels={channels} loading={channelsLoading} />
+          <ChannelList />
           <ChatContainer>
             <Chat>
               {messageLoading ? (
@@ -145,17 +144,18 @@ const Home = () => {
                       user={user.me}
                     />
                   ) : null}
-                  {message.messages.messages.map((msg) => (
-                    <Message
-                      key={msg.id}
-                      id={msg.id}
-                      image={msg.user.image}
-                      username={msg.user.username}
-                      message={msg.content}
-                      user={user.me}
-                    />
-                  ))}
-                  {message.messages.hasMore && (
+                  {message &&
+                    message.messages.messages.map((msg) => (
+                      <Message
+                        key={msg.id}
+                        id={msg.id}
+                        image={msg.user.image}
+                        username={msg.user.username}
+                        message={msg.content}
+                        user={user.me}
+                      />
+                    ))}
+                  {message && message.messages.hasMore && (
                     <button
                       onClick={() => {
                         fetchMore({

@@ -61,7 +61,7 @@ const MyApp = ({ Component, pageProps }) => {
             width: 100vw;
             min-height: 100vh;
             display: flex;
-            overflow-y: hidden;
+            overflow-x: hidden;
             flex-direction: column;
             background-image: linear-gradient(
               to right top,
