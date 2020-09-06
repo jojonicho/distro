@@ -40,7 +40,7 @@ const Chat = styled.div`
 `
 const IndexContainer = styled.div`
   height: 100vh;
-  width: 99vw;
+  // width: 99vw;
   // margin: 1vw;
   display: flex;
   flex-direction: row;
@@ -53,7 +53,7 @@ const MemberContainer = styled.div`
   display: flex;
 `
 const ChatContainer = styled.div`
-  min-width: 300px;
+  // min-width: 300px;
   width: 90vw;
   display: flex;
   flex-direction: column;
