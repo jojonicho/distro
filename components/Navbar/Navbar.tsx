@@ -97,9 +97,9 @@ export const Navbar: React.FC<NavbarProps> = ({ data, loading }) => {
           <Button
             onClick={async () => {
               await logout()
-              setAccessToken('')
               await client!.resetStore()
-              router.push('/')
+              await setAccessToken('')
+              router.push('/login')
             }}
           >
             logout

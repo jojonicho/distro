@@ -116,7 +116,6 @@ const Index = () => {
     })
     reset()
   }
-  const { data: channels, loading: channelsLoading } = useChannelsQuery()
 
   return (
     <>
@@ -125,7 +124,7 @@ const Index = () => {
       ) : user && user.me ? (
         <IndexContainer>
           <Navbar data={user} loading={userLoading} />
-          <ChannelList channels={channels} loading={channelsLoading} />
+          <ChannelList />
           <ChatContainer>
             <Chat>
               {messageLoading ? (
@@ -157,7 +156,7 @@ const Index = () => {
                         user={user.me}
                       />
                     ))}
-                  {message.messages.hasMore && (
+                  {message && message.messages.hasMore && (
                     <button
                       onClick={() => {
                         fetchMore({

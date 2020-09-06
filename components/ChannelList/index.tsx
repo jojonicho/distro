@@ -4,6 +4,7 @@ import styled from '@emotion/styled'
 import {
   useCreateChannelMutation,
   CreateChannelMutationVariables,
+  useChannelsQuery,
 } from '../../generated/graphql'
 import { BarLoader } from 'react-spinners'
 import Link from 'next/link'
@@ -24,10 +25,7 @@ import {
 import { colors } from '../../utils/theme'
 import { useForm } from 'react-hook-form'
 
-interface ChannelListProps {
-  loading: boolean
-  channels: any
-}
+interface ChannelListProps {}
 
 const ChannelContainer = styled.div`
   display: flex;
@@ -58,8 +56,9 @@ const Button = styled.button`
   height: calc(1vw + 1.75rem);
 `
 
-const ChannelList: React.FC<ChannelListProps> = ({ loading, channels }) => {
+const ChannelList: React.FC<ChannelListProps> = () => {
   const [chn] = useCreateChannelMutation()
+  const { data: channels, loading, refetch } = useChannelsQuery()
   const { handleSubmit, register, formState } = useForm()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const onSubmit = async ({ name }: CreateChannelMutationVariables) => {
@@ -85,9 +84,10 @@ const ChannelList: React.FC<ChannelListProps> = ({ loading, channels }) => {
               <Button>🏠</Button>
             </AddChannelContainer>
           </Link>
-          {channels.channels.map((chn) => (
-            <Channel id={chn.id} image={chn.image} name={chn.name} />
-          ))}
+          {channels &&
+            channels.channels.map((chn) => (
+              <Channel id={chn.id} image={chn.image} name={chn.name} />
+            ))}
           <AddChannelContainer>
             <Button onClick={onOpen}>+</Button>
 

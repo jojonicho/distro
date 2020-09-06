@@ -18,7 +18,7 @@ export type Query = {
   users: Array<User>;
   messages: PaginatedMessages;
   channelMessages: PaginatedMessages;
-  channels: Array<Channel>;
+  channels?: Maybe<Array<Channel>>;
   channelUsers: Array<User>;
 };
 
@@ -145,10 +145,10 @@ export type ChannelsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type ChannelsQuery = (
   { __typename?: 'Query' }
-  & { channels: Array<(
+  & { channels?: Maybe<Array<(
     { __typename?: 'Channel' }
     & Pick<Channel, 'id' | 'name' | 'image'>
-  )> }
+  )>> }
 );
 
 export type CreateChannelMutationVariables = Exact<{
