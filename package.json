@@ -33,7 +33,7 @@
     "apollo-link-token-refresh": "^0.3.1",
     "apollo-link-ws": "^1.0.20",
     "apollo-upload-client": "^13.0.0",
-    "axios": "^0.20.0",
+    "axios": "^0.21.1",
     "axios-auth-refresh": "^3.0.0",
     "babel-plugin-emotion": "^10.0.17",
     "babel-plugin-import": "^1.13.0",
